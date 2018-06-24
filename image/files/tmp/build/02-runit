@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+# @see https://rawgit.com/dockage/runit-scripts/master/scripts/installer
+fetch() {
+    local url=https://api.github.com/repos/dockage/runit-scripts/tarball
+    local name=${1:-runit-scripts}
+
+    curl -SL "${url}" > "${name}.tar.gz"
+    tar -xzf "${name}.tar.gz"
+    cp -ar dockage-runit-scripts-*/alpine/etc/* /etc
+    cp -ar dockage-runit-scripts-*/scripts/usr/* /usr
+    rm -rf dockage-runit-scripts-* "${name}.tar.gz"
+}
+
+run() {
+    (
+        set -eu
+
+        cd /tmp
+        apk add --no-cache curl runit
+        fetch
+    )
+}
+
+run
