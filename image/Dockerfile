@@ -8,3 +8,6 @@ ENV LC_ALL=en_US.UTF-8 \
     EDITOR=vim \
     PATH=/opt/local/bin:/opt/local/sbin:$PATH \
     INITRD=no
+
+# Define working directory.
+WORKDIR /root
