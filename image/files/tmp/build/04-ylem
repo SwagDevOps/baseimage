@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+run() {
+    local url=https://github.com/SwagDevOps/ylem
+    local ref=master
+
+    (
+        set -eu
+
+        cd /tmp
+        install_gem "${url}" "${ref}"
+    )
+}
+
+install_gem() {
+    local url=$1
+    local ref=${2:-master}
+    local name="$(basename -- "$url")"
+
+    (
+        set -eu
+
+        git clone "${url}" "${name}"
+        (
+            set -eu
+
+            cd "${name}"
+            git checkout "${ref}"
+
+            gem build *.gemspec
+            gem install *.gem
+        )
+        rm -rf "${name}"
+    )
+}
+
+run
