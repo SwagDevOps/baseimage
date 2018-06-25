@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+
+exec 2>&1
+
+COMMAND='/sbin/syslogd -n -D'
+USER=root
+
+exec /sbin/chpst -u ${USER} -- ${COMMAND}
