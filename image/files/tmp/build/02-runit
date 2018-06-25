@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+SERVICE_AVAILABLE_DIR=${SERVICE_ENABLED_DIR:-/service}
+
 # @see https://rawgit.com/dockage/runit-scripts/master/scripts/installer
 fetch_scripts() {
     local url=https://api.github.com/repos/dockage/runit-scripts/tarball
@@ -8,7 +10,8 @@ fetch_scripts() {
     curl -SL "${url}" > "${name}.tar.gz"
     tar -xzf "${name}.tar.gz"
 
-    cp -ar dockage-runit-scripts-*/alpine/etc/* /etc
+    mkdir -p /etc/runit
+    cp -ar dockage-runit-scripts-*/alpine/etc/runit/* /etc/runit
     cp -ar dockage-runit-scripts-*/scripts/usr/* /usr
     rm -rf dockage-runit-scripts-* "${name}.tar.gz"
 }
@@ -20,6 +23,7 @@ run() {
 
         apk add --no-cache curl runit
         fetch_scripts
+        mkdir -p "${SERVICE_ENABLED_DIR}"
     )
 }
 
