@@ -4,7 +4,7 @@ run() {
     set -eux
 
     apk add --no-cache \
-        bash bash-completion busybox \
+        bash bash-completion busybox file \
         curl sed tar shadow  \
         htop vim less coreutils sed \
         gcc gnupg procps musl-dev make \
