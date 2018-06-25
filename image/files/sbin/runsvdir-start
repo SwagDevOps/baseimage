@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+set -eu
+
+SERVICE_AVAILABLE_DIR=${SERVICE_ENABLED_DIR:-/service}
+
+exec runsvdir -P "${SERVICE_ENABLED_DIR}"
