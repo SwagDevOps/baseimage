@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+set -eu
+
+USER=root
+GROUP=root
+
+# Variables used for logging
+SERVICE=$(basename $(dirname $(dirname $(readlink -f -- $0))))
+LOG_DIR=/var/log/runit/${SERVICE}
+
+# Create log dir and fix owner & mode
+mkdir -p ${LOG_DIR}
+chown ${USER}:${GROUP} ${LOG_DIR}
+chmod 700 ${LOG_DIR}
+
+exec /sbin/chpst -u ${USER} /sbin/svlogd -tt ${LOG_DIR}

@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+
+exec 2>&1
+
+COMMAND='/usr/sbin/crond -S -f'
+USER=root
+
+exec /sbin/chpst -u ${USER} -- ${COMMAND}
