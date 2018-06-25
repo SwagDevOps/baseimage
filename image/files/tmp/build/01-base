@@ -11,7 +11,7 @@ run() {
         linux-headers zlib zlib-dev \
         ruby ruby-dev ruby-irb ruby-rdoc ruby-bundler \
         openssl openssl-dev libssl1.0 \
-        cmake pkgconf
+        cmake pkgconf git
 }
 
 run
