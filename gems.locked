@@ -1,0 +1,30 @@
+GIT
+  remote: https://github.com/SwagDevOps/kamaze-docker_image.git
+  revision: 3af7e67f82bb065b7a92c8998ce244813c83fef5
+  branch: master
+  specs:
+    kamaze-docker_image (0.0.1)
+      cliver (~> 0.3)
+      kamaze-version (~> 1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    cliver (0.3.2)
+    dry-inflector (0.1.2)
+    kamaze-version (1.0.0)
+      dry-inflector (~> 0.1)
+    rake (12.3.1)
+    sys-proc (1.1.2)
+      dry-inflector (~> 0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  kamaze-docker_image!
+  rake (~> 12.3)
+  sys-proc (~> 1.1, >= 1.1.2)
+
+BUNDLED WITH
+   1.16.2
