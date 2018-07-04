@@ -1,7 +1,10 @@
 #!/usr/bin/env sh
 
 run() {
-    rm -rf /var/cache/apk/* /build
+    rm -rf \
+       /var/cache/apk/* \
+       /build \
+       /etc/profile.d/color_prompt
 }
 
 run
