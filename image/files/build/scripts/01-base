@@ -5,15 +5,9 @@ run() {
 
     apk add --no-cache \
         bash bash-completion busybox file \
-        curl sed tar shadow git \
+        curl sed tar grep shadow rsync git \
         htop vim less coreutils sed procps \
         ruby ruby-bundler
 }
 
 run
-
-# gcc gnupg procps musl-dev make \
-# linux-headers zlib zlib-dev \
-# ruby-dev ruby-irb ruby-rdoc
-# openssl openssl-dev libssl1.0 \
-# cmake pkgconf git
