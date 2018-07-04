@@ -11,8 +11,6 @@ ENV LC_ALL=en_US.UTF-8 \
     SVDIR=/service \
     SVWAIT=4
 
-WORKDIR /root
-
 COPY files /
 RUN /build/build.sh
 
