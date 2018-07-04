@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -e
+
+# Installs config files
+rsync -ru /etc/skel/.[a-zA-Z0-9]* /root/
