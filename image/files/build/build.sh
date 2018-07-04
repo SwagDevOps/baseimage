@@ -3,7 +3,7 @@
 build() {
     (
         set -eu
-        cd $(dirname -- "$(readlink -f -- "$0")")/build
+        cd $(dirname -- "$(readlink -f -- "$0")")/scripts
 
         ls | sort | while read script; do
             test -r  "$script" || continue

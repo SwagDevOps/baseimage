@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-run() {
-    rm -rf /var/cache/apk/* /tmp/*
-}
-
-run

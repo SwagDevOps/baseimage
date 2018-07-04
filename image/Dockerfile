@@ -14,7 +14,7 @@ ENV LC_ALL=en_US.UTF-8 \
 WORKDIR /root
 
 COPY files /
-RUN /tmp/build.sh
+RUN /build/build.sh
 
 ENTRYPOINT ["/sbin/init", "-c", "--", "ylem", "start", "--"]
 CMD ["/sbin/runsvdir-start"]
