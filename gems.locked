@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/SwagDevOps/kamaze-docker_image.git
-  revision: 0c8ac9177181982e2076cbc6ada1a124f694c951
+  revision: 65d3a290ce71fa0999ac3e99719dfdf39dfbb551
   branch: master
   specs:
     kamaze-docker_image (0.0.1)
