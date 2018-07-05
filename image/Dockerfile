@@ -14,5 +14,5 @@ ENV LC_ALL=en_US.UTF-8 \
 COPY files /
 RUN /build/build.sh
 
-ENTRYPOINT ["/sbin/init", "-c", "--", "ylem", "start", "--"]
+ENTRYPOINT ["/sbin/init", "-c", "--", "ylem", "start", "--verbose", "--"]
 CMD ["/sbin/runsvdir-start"]
