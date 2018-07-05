@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+
+exec 2>&1
+
+COMMAND="/usr/sbin/dropbear -Fsp ${SSH_PORT:-22} -r /etc/dropbear/host_rsa"
+USER=root
+
+exec /sbin/chpst -u ${USER} -- ${COMMAND}
