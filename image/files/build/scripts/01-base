@@ -4,10 +4,12 @@ run() {
     set -eux
 
     apk add --no-cache \
-        bash bash-completion busybox file \
-        curl sed tar grep shadow rsync git \
-        htop vim less coreutils sed procps \
-        ruby ruby-bundler
+        bash bash-completion htop \
+        busybox file \
+        curl sed tar grep shadow pwgen rsync git \
+        vim less coreutils sed procps \
+        dropbear \
+        ruby ruby-bundler ruby-json
 }
 
 run
