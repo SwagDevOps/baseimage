@@ -3,6 +3,7 @@
 run() {
     runit-enable-service syslog
     runit-enable-service cron
+    runit-enable-service ssh
 }
 
 run
