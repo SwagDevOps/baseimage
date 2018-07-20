@@ -9,7 +9,7 @@ run() {
         curl sed tar grep shadow pwgen rsync git \
         vim less coreutils sed procps \
         dropbear \
-        ruby ruby-bundler ruby-json
+        ruby ruby-bundler ruby-json ruby-bigdecimal
 }
 
 run
