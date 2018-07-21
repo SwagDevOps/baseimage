@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-set -eu
-
-exec 2>&1
-
-COMMAND=false
-USER=root
-
-exec /sbin/chpst -u ${USER} -- ${COMMAND}
