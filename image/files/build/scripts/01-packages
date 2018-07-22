@@ -5,8 +5,8 @@ run() {
 
     apk add --no-cache \
         bash bash-completion htop \
-        busybox file \
-        curl sed tar grep shadow pwgen rsync git \
+        runit busybox file \
+        curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
         dropbear \
         ruby ruby-bundler ruby-json ruby-bigdecimal

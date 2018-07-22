@@ -1,21 +1,11 @@
 #!/usr/bin/env sh
 
 # @see https://github.com/Yelp/dumb-init
-
-download() {
-    local version=1.2.1
-    local url=https://github.com/Yelp/dumb-init/releases/download/v${version}/dumb-init_${version}_amd64
-    local name=${1:-dumb-init}
-
-    curl -SL  "$url" > "$name"
-}
-
 run() {
     (
         set -eu
 
-        cd /tmp
-        download dumb-init
+        cd /build/vendor/
         chmod +x dumb-init
         mv -v dumb-init /sbin/init
     )
