@@ -1,5 +1,7 @@
 .#*
 /.*
+/image/files/build/vendor/
+/image/files/etc/dropbear/
 /vendor/
 !/.env
 !/.gitignore
