@@ -7,6 +7,7 @@ require 'kamaze/docker_image'
 require 'sys/proc'
 
 autoload :Vendorer, 'vendorer'
+autoload :CLOBBER, 'rake/clean'
 
 Sys::Proc.progname = nil
 
@@ -34,3 +35,5 @@ task 'pre_build' do
     v.parse(File.read(config_location || config.locations.last))
   end
 end
+
+CLOBBER.push('image/files/build/vendor')
