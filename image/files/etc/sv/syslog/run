@@ -1,9 +1,9 @@
-#!/usr/bin/env sh
-set -eu
+#!/usr/bin/env svrun
+# frozen_string_literal: true
+# vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-exec 2>&1
+run(['/sbin/syslogd', '-n', '-D'])
 
-COMMAND='/sbin/syslogd -n -D'
-USER=root
-
-exec /sbin/chpst -u ${USER} -- ${COMMAND}
+# Local Variables:
+# mode: ruby
+# End:

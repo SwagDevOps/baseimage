@@ -1,9 +1,11 @@
-#!/usr/bin/env sh
-set -eu
+#!/usr/bin/env svrun
+# frozen_string_literal: true
+# vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-exec 2>&1
+(ENV['SSH_PORT'] || 22).tap do |port|
+  run(['/usr/sbin/dropbear', '-Fsp', port, '-r', '/etc/dropbear/host_rsa'])
+end
 
-COMMAND="/usr/sbin/dropbear -Fsp ${SSH_PORT:-22} -r /etc/dropbear/host_rsa"
-USER=root
-
-exec /sbin/chpst -u ${USER} -- ${COMMAND}
+# Local Variables:
+# mode: ruby
+# End:

@@ -1,16 +1,9 @@
-#!/usr/bin/env sh
-set -eu
+#!/usr/bin/env svrun
+# frozen_string_literal: true
+# vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-USER=root
-GROUP=root
+log(from: __FILE__)
 
-# Variables used for logging
-SERVICE=$(basename $(dirname $(dirname $(readlink -f -- $0))))
-LOG_DIR=/var/log/runit/${SERVICE}
-
-# Create log dir and fix owner & mode
-mkdir -p ${LOG_DIR}
-chown ${USER}:${GROUP} ${LOG_DIR}
-chmod 700 ${LOG_DIR}
-
-exec /sbin/chpst -u ${USER} /sbin/svlogd -tt ${LOG_DIR}
+# Local Variables:
+# mode: ruby
+# End:
