@@ -11,4 +11,5 @@ group :default do
 
   gem 'rake', '~> 12.3'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
+  gem 'vendorer', '~> 0.1'
 end

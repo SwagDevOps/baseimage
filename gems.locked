@@ -23,6 +23,7 @@ GEM
     rake (12.3.1)
     sys-proc (1.1.2)
       dry-inflector (~> 0.1)
+    vendorer (0.1.16)
 
 PLATFORMS
   ruby
@@ -31,6 +32,7 @@ DEPENDENCIES
   kamaze-docker_image!
   rake (~> 12.3)
   sys-proc (~> 1.1, >= 1.1.2)
+  vendorer (~> 0.1)
 
 BUNDLED WITH
    1.16.2
