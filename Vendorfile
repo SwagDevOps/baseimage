@@ -1,0 +1,26 @@
+{
+  [:folder, 'sv-utils'] => [
+    'https://github.com/SwagDevOps/sv-utils'
+  ],
+  [:folder, 'ylem'] => [
+    'https://github.com/SwagDevOps/ylem'
+  ],
+  [:file, 'dumb-init'] => [
+    'https://github.com/Yelp/dumb-init/releases/download/v%<version>s/dumb-init_%<version>s_amd64' % {
+      version: '1.2.1'
+    }
+  ],
+  [:file, 'runit-scripts.tar.gz'] => [
+    'https://api.github.com/repos/dockage/runit-scripts/tarball'
+  ]
+}.tap do |packages|
+  packages.each do |k, v|
+    Pathname.new('image/files/build/vendor').freeze.tap do |dir|
+      public_send(k.fetch(0), *([dir.join(k.fetch(1))] + v))
+    end
+  end
+end
+
+# Local Variables:
+# mode: ruby
+# End:
