@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-run(['/sbin/syslogd', '-n', '-D'])
+runner(['/sbin/syslogd', '-n', '-D']).call
 
 # Local Variables:
 # mode: ruby
