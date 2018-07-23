@@ -11,6 +11,14 @@ ENV LC_ALL=en_US.UTF-8 \
     SVDIR=/service \
     SVWAIT=4
 
+RUN apk add --no-cache \
+        bash bash-completion htop \
+        runit busybox file \
+        curl sed tar grep shadow pwgen rsync \
+        vim less coreutils sed procps \
+        dropbear \
+        ruby ruby-bundler ruby-json ruby-bigdecimal
+
 COPY files /
 RUN /build/build.sh
 
