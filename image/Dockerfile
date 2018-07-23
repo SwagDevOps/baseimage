@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.8
 MAINTAINER Dimitri Arrigoni <dimitri@arrigoni.me>
 
 ENV LC_ALL=en_US.UTF-8 \
@@ -17,7 +17,8 @@ RUN apk add --no-cache \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
         dropbear \
-        ruby ruby-bundler ruby-json ruby-bigdecimal
+        ruby ruby-bundler \
+        ruby-bigdecimal ruby-etc ruby-fiddle ruby-json
 
 COPY files /
 RUN /build/build.sh
