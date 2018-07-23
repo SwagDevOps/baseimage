@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -e
+
+which bash > /dev/null || exit 0
+sed "s#:/bin/ash\$#:$(which bash)#g" -i /etc/passwd
