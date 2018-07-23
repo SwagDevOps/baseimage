@@ -18,8 +18,10 @@ Kamaze::DockerImage.new do |config|
   config.path    = "#{Dir.pwd}/image"
   config.verbose = false
   config.run_as  = File.basename(config.name)
+  config.ssh     = { enabled: true }
 
   config.commands.merge!(
+    stop: ['stop', '-t', 20, '%<run_as>s'],
     start: ['run', '-h', config.run_as,
             '-d', '--name', '%<run_as>s', '%<tag>s']
   )
