@@ -17,7 +17,7 @@ run() {
         cd /build/vendor/
 
         install_scripts
-        mkdir -p "${SERVICE_ENABLED_DIR}"
+        mkdir -p "${SVDIR}"
     )
 }
 

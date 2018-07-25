@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
+SVDIR=${SVDIR:-/service}
+
 set -eu
 
-SERVICE_AVAILABLE_DIR=${SERVICE_ENABLED_DIR:-/service}
-
-exec runsvdir -P "${SERVICE_ENABLED_DIR}" < /dev/null
+exec runsvdir -P "${SVDIR}" < /dev/null
