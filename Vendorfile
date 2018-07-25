@@ -3,10 +3,14 @@
 
 {
   [:folder, 'sv-utils'] => [
-    'https://github.com/SwagDevOps/sv-utils'
+    'https://github.com/SwagDevOps/sv-utils', {
+      ref: 'a1b880d'
+    }
   ],
   [:folder, 'ylem'] => [
-    'https://github.com/SwagDevOps/ylem'
+    'https://github.com/SwagDevOps/ylem', {
+      ref: 'c3b8272'
+    }
   ],
   [:file, 'dumb-init'] => [
     'https://github.com/Yelp/dumb-init/releases/download/v%<version>s/dumb-init_%<version>s_amd64' % {
