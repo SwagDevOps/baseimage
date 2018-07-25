@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'shellwords'
+require 'pathname'
+
+class EnvExp < Hash
+  # @param [ENV|Hash] env
+  def initialize(env = ENV)
+    env.clone.to_h.sort.to_h.each do |k, v|
+      self[k] = v
+    end
+  end
+
+  # @return [String]
+  def to_s
+    self.map { |k, v| "#{k}=#{Shellwords.escape(v)}\n" }.join
+  end
+
+  # Environment formatted, with ``export``.
+  #
+  # @return [String]
+  def export
+    to_s.lines.map { |line| "export #{line}" }.join
+  end
+
+  # Get string representation followed by the content of given file.
+  #
+  # @return [String]
+  def append(filepath, format = :to_s)
+    [
+      self.public_send(format),
+      Pathname.new(filepath).read.lstrip,
+     ].join("\n")
+  end
+
+  # Get string representation preceded by the content of given file.
+  #
+  # @return [String]
+  def prepend(filepath, format = :to_s)
+    [
+      Pathname.new(filepath).read.rstrip,
+      self.public_send(format),
+    ].join("\n")
+  end
+end
+
+# Execution
+#
+# Write files:
+# * /etc/profile.d/environment.sh
+# * /etc/environment
+#
+# Shares environment, as seen from Docker, to be seen from shells (ssh).
+EnvExp.new.tap do |env|
+  env.delete_if do |k, v|
+    ['HOME', 'LOGNAME', 'USER', 'USERNAME', 'HOSTNAME'].include?(k)
+  end
+end.freeze.tap do |env|
+  {
+    '/etc/profile.d/environment.sh' => lambda { |fp| fp.write(env.export) },
+    '/etc/environment' => lambda { |fp| fp.write(env.prepend(fp)) }
+  }.map do |filepath, func|
+    Thread.new { func.call(Pathname.new(filepath)) }
+  end.map(&:join)
+end
