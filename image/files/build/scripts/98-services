@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
 
 run() {
+    set -eu
+
+    mkdir -p "${SVDIR}"
+
     runit-enable-service syslog
     runit-enable-service cron
     runit-enable-service ssh
