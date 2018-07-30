@@ -1,7 +1,9 @@
-.#*
 /.*
+.#*
 /image/files/build/vendor/
 /image/files/etc/dropbear/
+/ssh/*
 /vendor/
 !/.env
 !/.gitignore
+!/ssh/README.md

@@ -15,7 +15,7 @@ RUN apk add --no-cache \
         runit busybox file \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
-        dropbear tzdata \
+        dropbear dropbear-convert tzdata \
         ruby ruby-bundler \
         ruby-bigdecimal ruby-etc ruby-fiddle ruby-json
 

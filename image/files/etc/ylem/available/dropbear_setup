@@ -8,15 +8,20 @@
 #
 # ```
 # /etc/dropbear/
-# ├── authorized_keys
+# ├── allow
 # │   └── root
-# └── host_rsa
+# ├── host_rsa
+# └── host_rsa.pem
 # ```
 #
 # ``host_rsa`` file SHOULD be mounted, or it will be generated
 # it can be converted from a PEM file (``host_rsa.pem``).
-# Files found in ``/etc/dropbear/authorized_keys`` will be copied,
+# Files found in ``/etc/dropbear/allow`` will be copied,
 # to the corresponding users ``.ssh`` directories.
+#
+# ```sh
+# yes | ssh-keygen -t rsa -b 4096 -N '' -f host_rsa.pem -m PEM -C "your_email@example.com"
+# ```
 class DropbearSetup
   autoload :Etc, 'etc'
   autoload :Pathname, 'pathname'
@@ -70,7 +75,7 @@ class DropbearSetup
 
     if host_pem.file? and host_pem.readable?
       utils.chmod(0600, host_pem)
-      sh(*cmd)
+      sh(*cmd.map(&:to_s))
     end
 
     self
@@ -97,7 +102,7 @@ class DropbearSetup
   #
   # @return [self]
   def authorize
-    Dir.glob('authorized_keys/*').each { |file| utils.chmod(0600, file) }
+    Dir.glob('allow/*').each { |file| utils.chmod(0600, file) }
        .map do |file|
       begin
         user = Etc.getpwnam(Pathname.new(file).basename.to_s)
