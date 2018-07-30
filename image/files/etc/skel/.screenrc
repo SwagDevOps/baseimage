@@ -1,0 +1,29 @@
+# vim: filetype=screen foldmethod=marker
+
+startup_message off
+autodetach on
+defnonblock 5
+nonblock on
+defscrollback 1000
+altscreen on
+attrcolor b ".I"
+defbce "on"
+# Make screen behave more like tmux
+# use ctrl-b as escape
+escape ^Bb
+# change title with ctrl-b,
+bind , title
+
+windowlist string "%4n %h%=%f"
+# hardstatus line
+caption always "%{= wk} %-w%{= KW}% %t %{-}%+w %= %1`@%H "
+backtick 1 30 30 sh -c 'echo $USER'
+
+defmonitor on
+monitor on
+msgwait 3
+vbell on
+
+# Local Variables:
+# mode: conf
+# End:

@@ -11,7 +11,7 @@ ENV INITRD=no\
     SVWAIT=4
 
 RUN apk add --no-cache \
-        bash bash-completion htop \
+        bash bash-completion htop screen \
         runit busybox file \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
