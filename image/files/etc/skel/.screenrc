@@ -17,7 +17,7 @@ bind , title
 windowlist string "%4n %h%=%f"
 # hardstatus line
 caption always "%{= wk} %-w%{= KW}% %t %{-}%+w %= %1`@%H "
-backtick 1 30 30 sh -c 'echo $USER'
+backtick 1 30 30 sh -c 'whoami'
 
 defmonitor on
 monitor on
