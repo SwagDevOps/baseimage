@@ -9,6 +9,10 @@ case $- in
       *) return;;
 esac
 
+export USER=${USER-$(whoami)}
+export HOSTNAME=${HOSTNAME-$(hostname)}
+export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
+
 shopt -s histappend
 export HISTCONTROL='ignoreboth,ignoredups'
 export HISTSIZE=1000
@@ -16,26 +20,18 @@ export HISTFILESIZE=2000
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-shopt -s dotglob # files beginning with . treturned in path-name expansion.
+shopt -s dotglob # files beginning with . returned in path-name expansion.
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# enable color support of ls and also add handy aliases
+# enable color support
 test -x /usr/bin/dircolors && {
     eval "$(dircolors -b)"
-
-    alias ls='ls --color=auto'
-
-    unalias grep fgrep egrep &> /dev/null
-    /usr/bin/env grep --help | grep -q 'gnu\.org' && {
-        alias grep='grep --color=auto'
-        alias fgrep='fgrep --color=auto'
-        alias egrep='egrep --color=auto'
-    }
 }
 
-# make less more friendly for non-text input files, see lesspipe(1)
-test -x /usr/bin/lesspipe && {
-    eval "$(lesspipe)"
+alias ls='ls --color=auto'
+/usr/bin/env grep --help | grep -q 'gnu\.org' 2> /dev/null && {
+    unalias grep fgrep egrep &> /dev/null
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 }
