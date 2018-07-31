@@ -113,8 +113,6 @@ class DropbearSetup
     end.compact.to_h.each do |file, user|
       begin
         Pathname.new("#{user.dir}/.ssh/authorized_keys").tap do |target|
-          next if target.file?
-
           utils.mkdir_p(target.dirname)
           utils.cp(file, target, verbose: true)
           utils.chown(user.uid, user.gid, target)
