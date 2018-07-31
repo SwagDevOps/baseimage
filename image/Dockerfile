@@ -22,5 +22,5 @@ RUN apk add --no-cache \
 COPY files /
 RUN /build/build.sh
 
-ENTRYPOINT ["/sbin/init", "-v", "--", "ylem", "start", "--verbose", "--"]
+ENTRYPOINT ["/sbin/init", "-v", "--", "ylem", "start", "-v", "--"]
 CMD ["/sbin/runsvdir-start"]
