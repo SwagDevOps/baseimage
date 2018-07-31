@@ -7,7 +7,8 @@ nonblock on
 defscrollback 1000
 altscreen on
 attrcolor b ".I"
-defbce "on"
+defbce on
+termcapinfo screen* 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
 # Make screen behave more like tmux
 # use ctrl-b as escape
 escape ^Bb
@@ -16,13 +17,16 @@ bind , title
 
 windowlist string "%4n %h%=%f"
 # hardstatus line
-caption always "%{= wk} %-w%{= KW}% %t %{-}%+w %= %1`@%H "
-backtick 1 30 30 sh -c 'whoami'
+hardstatus off
+caption always "%{= wk} %-w%{= KW}% %t %{-}%+w %= %1`@%2` "
+backtick 1 0 0   whoami
+backtick 2 30 30 hostname
 
 defmonitor on
 monitor on
 msgwait 3
 vbell on
+nethack on
 
 # Local Variables:
 # mode: conf
