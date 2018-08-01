@@ -7,6 +7,7 @@ self.tap do |main|
     project.subject = Class.new { const_set(:VERSION, main.image.version) }
     project.name    = image.name
     project.tasks   = [
+      'cs:correct', 'cs:control', 'cs:pre-commit',
       'misc:gitignore',
       'test',
       'version:edit',
