@@ -128,6 +128,7 @@ PLATFORMS
 DEPENDENCIES
   kamaze-docker_image!
   kamaze-project (~> 1.0, >= 1.0.3)
+  kamaze-version (~> 1.0)
   rake (~> 12.3)
   rspec (~> 3.7)
   rubocop (~> 0.56)

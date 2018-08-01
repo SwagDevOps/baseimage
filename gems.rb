@@ -9,6 +9,7 @@ group :default do
   gem 'kamaze-docker_image', \
       github: 'SwagDevOps/kamaze-docker_image', branch: 'master'
 
+  gem 'kamaze-version', '~> 1.0'
   gem 'rake', '~> 12.3'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
   gem 'vendorer', '~> 0.1'
