@@ -1,7 +1,7 @@
 FROM alpine:3.8
 MAINTAINER Dimitri Arrigoni <dimitri@arrigoni.me>
 
-ENV INITRD=no\
+ENV INITRD=no \
     TZ=Europe/Paris \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
