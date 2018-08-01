@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe 'login shell environment', :environment do
-  describe command('bash -lc env') do
+  describe command('bash -lc /usr/bin/env') do
     let(:path) do
       '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
     end
