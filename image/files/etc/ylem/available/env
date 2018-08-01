@@ -4,6 +4,7 @@
 require 'shellwords'
 require 'pathname'
 
+# Provides environment export.
 class EnvExp < Hash
   # @param [ENV|Hash] env
   def initialize(env = ENV)
@@ -31,7 +32,7 @@ class EnvExp < Hash
     [
       self.public_send(format),
       Pathname.new(filepath).read.lstrip,
-     ].join("\n")
+    ].join("\n")
   end
 
   # Get string representation preceded by the content of given file.
@@ -54,12 +55,12 @@ end
 # Shares environment, as seen from Docker, to be seen from shells (ssh).
 EnvExp.new.tap do |env|
   env.delete_if do |k, v|
-    ['HOME', 'LOGNAME', 'USER', 'USERNAME', 'HOSTNAME'].include?(k)
+    %w[PWD HOME LOGNAME USER USERNAME HOSTNAME].include?(k)
   end
 end.freeze.tap do |env|
   {
-    '/etc/profile.d/environment.sh' => lambda { |fp| fp.write(env.export) },
-    '/etc/environment' => lambda { |fp| fp.write(env.prepend(fp)) }
+    '/etc/profile.d/environment.sh' => ->(fp) { fp.write(env.export) },
+    '/etc/environment' => ->(fp) { fp.write(env.prepend(fp)) }
   }.map do |filepath, func|
     Thread.new { func.call(Pathname.new(filepath)) }
   end.map(&:join)
