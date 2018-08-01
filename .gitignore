@@ -1,9 +1,10 @@
-/.*
 .#*
+/.*
 /image/files/build/vendor/
-/image/files/etc/dropbear/
 /ssh/*
 /vendor/
 !/.env
 !/.gitignore
+!/.rspec
+!/.rubocop.yml
 !/ssh/README.md
