@@ -25,8 +25,17 @@ This image brings a 3 parts init system, composed of:
 ```
 git clone git@github.com:SwagDevOps/image-alpine_server.git
 cd image-alpine_server
-bundle install --path vendor/bundle
+bundle install --path vendor/bundle --without development
 bundle exec rake build start exec
+```
+
+## Run tests
+
+```
+mkdir -p ssh/allow
+cp ~/.ssh/id_rsa.pub ssh/allow/root
+bundle exec restart
+bundle exec rspec
 ```
 
 ## See also
