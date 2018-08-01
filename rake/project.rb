@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require 'kamaze/project'
+if Gem::Specification.find_all_by_name('kamaze-project').any?
+  require 'kamaze/project'
 
-self.tap do |main|
-  Kamaze.project do |project|
-    project.subject = Class.new { const_set(:VERSION, main.image.version) }
-    project.name    = image.name
-    project.tasks   = [
-      'cs:correct', 'cs:control', 'cs:pre-commit',
-      'misc:gitignore',
-      'test',
-      'version:edit',
-    ]
-  end.load!
+  self.tap do |main|
+    Kamaze.project do |project|
+      project.subject = Class.new { const_set(:VERSION, main.image.version) }
+      project.name    = image.name
+      project.tasks   = [
+        'cs:correct', 'cs:control', 'cs:pre-commit',
+        'misc:gitignore',
+        'test',
+        'version:edit',
+      ]
+    end.load!
+  end
 end
