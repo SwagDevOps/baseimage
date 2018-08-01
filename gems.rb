@@ -15,6 +15,10 @@ group :default do
   gem 'vendorer', '~> 0.1'
 end
 
+group :development do
+  gem 'rubocop', '~> 0.56'
+end
+
 group :test do
   gem 'fuubar', '~> 2.3'
   gem 'rspec', '~> 3.7'
