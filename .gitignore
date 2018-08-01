@@ -1,8 +1,7 @@
 .#*
+/**/vendor/
 /.*
-/image/files/build/vendor/
 /ssh/*
-/vendor/
 !/.env
 !/.gitignore
 !/.rspec
