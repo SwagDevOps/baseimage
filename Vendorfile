@@ -14,7 +14,7 @@
   ],
   [:file, 'dumb-init'] => [
     'https://github.com/Yelp/dumb-init/releases/download/v%<version>s/dumb-init_%<version>s_amd64' % {
-      version: '1.2.1'
+      version: '1.2.2'
     }
   ],
   [:file, 'runit-scripts.tar.gz'] => [
