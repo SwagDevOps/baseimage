@@ -2,7 +2,6 @@
 major: 0
 minor: 0
 patch: 1
-authors: ['Dimitri Arrigoni']
+maintainer: 'Dimitri Arrigoni'
 email: 'dimitri@arrigoni.me'
-date: '2017-07-31'
 homepage: 'https://github.com/SwagDevOps/image-alpine_server'

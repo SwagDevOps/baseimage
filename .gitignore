@@ -1,6 +1,7 @@
 .#*
 /**/vendor/
 /.*
+/image/Dockerfile
 /ssh/*
 !/.env
 !/.gitignore
