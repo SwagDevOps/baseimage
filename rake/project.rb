@@ -10,6 +10,7 @@ if Gem::Specification.find_all_by_name('kamaze-project').any?
       project.tasks   = [
         'cs:correct', 'cs:control', 'cs:pre-commit',
         'misc:gitignore',
+        'shell',
         'test',
         'version:edit',
       ]
