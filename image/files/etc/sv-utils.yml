@@ -1,0 +1,7 @@
+---
+runner:
+  command:
+  privileged: true
+logger:
+  privileged: true
+  command: ['/sbin/svlogd', '-tt', '%<dir>s']
