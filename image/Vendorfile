@@ -22,7 +22,7 @@
   ]
 }.tap do |packages|
   packages.each do |k, v|
-    Pathname.new('image/files/build/vendor').freeze.tap do |dir|
+    Pathname.new('files/build/vendor').freeze.tap do |dir|
       public_send(k.fetch(0), *([dir.join(k.fetch(1))] + v))
     end
   end
