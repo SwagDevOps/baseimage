@@ -3,7 +3,7 @@
 describe 'services', :services do
   {
     cron: '/usr/sbin/crond -S -f',
-    syslog: '/sbin/syslogd -n -D',
+    syslog: '/sbin/syslogd -n -b 6 -s 200 -D',
     ssh: '/usr/sbin/dropbear -Fsp 22 -r /etc/dropbear/host_rsa'
   }.each do |service, command|
     describe command('ps -Ao args --no-headers') do
