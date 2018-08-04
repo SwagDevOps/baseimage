@@ -1,3 +1,4 @@
 ---
 logger.level: DEBUG
 scripts.path: enabled
+logger.file: /var/log/ylem
