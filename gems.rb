@@ -11,13 +11,14 @@ group :default do
 
   gem 'kamaze-version', '~> 1.0'
   gem 'rake', '~> 12.3'
-  gem 'sys-proc', '~> 1.1', '>= 1.1.2'
+  gem 'tenjin', '~> 0.7'
   gem 'vendorer', '~> 0.1'
 end
 
 group :development do
   gem 'kamaze-project', '~> 1.0', '>= 1.0.3'
   gem 'rubocop', '~> 0.56'
+  gem 'sys-proc', '~> 1.1', '>= 1.1.2'
 end
 
 group :test do

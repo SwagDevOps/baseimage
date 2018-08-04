@@ -134,6 +134,7 @@ DEPENDENCIES
   rubocop (~> 0.56)
   serverspec (~> 2.41)
   sys-proc (~> 1.1, >= 1.1.2)
+  tenjin (~> 0.7)
   vendorer (~> 0.1)
 
 BUNDLED WITH
