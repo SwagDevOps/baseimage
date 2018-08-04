@@ -4,12 +4,13 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'sys/proc'
+if Gem::Specification.find_all_by_name('sys-proc').any?
+  require 'sys/proc'
 
-Sys::Proc.progname = nil
+  Sys::Proc.progname = 'rake'
+end
 
 Dir.chdir(__dir__) do
-  require_relative 'rake/image'
-  require_relative 'rake/project'
-  require_relative 'rake/build'
+  %w[image project build]
+    .each { |req| require_relative "rake/#{req}" }
 end
