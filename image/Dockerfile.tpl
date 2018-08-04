@@ -1,3 +1,5 @@
+# vim: ft=dockerfile
+
 FROM alpine:3.8
 
 <?rb
