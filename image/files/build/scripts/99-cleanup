@@ -2,6 +2,7 @@
 
 run() {
     rm -rf \
+       /root/.gem/ \
        /var/cache/apk/* \
        /build \
        /etc/profile.d/color_prompt
