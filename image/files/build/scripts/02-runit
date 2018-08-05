@@ -1,13 +1,9 @@
 #!/usr/bin/env sh
 
-SERVICE_AVAILABLE_DIR=${SERVICE_ENABLED_DIR:-/service}
-
 # @see https://rawgit.com/dockage/runit-scripts/master/scripts/installer
 install_scripts() {
     tar -xzf runit-scripts.tar.gz
 
-    mkdir -p /etc/runit
-    cp -ar dockage-runit-scripts-*/alpine/etc/runit/* /etc/runit
     cp -ar dockage-runit-scripts-*/scripts/usr/* /usr
 }
 
