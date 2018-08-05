@@ -24,10 +24,10 @@ ENV INITRD=no \
 
 RUN apk add --no-cache \
         bash bash-completion htop screen \
-        runit busybox file \
+        runit busybox file tzdata \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
-        dropbear dropbear-convert tzdata \
+        dropbear dropbear-convert dropbear-scp \
         ruby ruby-bundler \
         ruby-bigdecimal ruby-etc ruby-fiddle ruby-json && \
     rm -f /sbin/runit /etc/runit

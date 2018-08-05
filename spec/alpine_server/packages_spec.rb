@@ -5,10 +5,10 @@
 describe 'installed packages', :packages do
   [
     %w[bash bash-completion htop screen],
-    %w[runit busybox file],
+    %w[runit busybox file tzdata],
     %w[curl sed tar grep shadow pwgen rsync],
     %w[vim less coreutils sed procps],
-    %w[dropbear dropbear-convert tzdata],
+    %w[dropbear dropbear-convert dropbear-scp],
     %w[ruby ruby-bundler],
     %w[ruby-bigdecimal ruby-etc ruby-fiddle ruby-json],
   ].flatten.each do |package|
