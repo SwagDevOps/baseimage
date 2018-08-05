@@ -34,7 +34,7 @@ bundle exec rake build start exec
 ```
 mkdir -p ssh/allow
 cp ~/.ssh/id_rsa.pub ssh/allow/root
-bundle exec restart
+bundle exec rake restart
 bundle exec rspec
 ```
 
