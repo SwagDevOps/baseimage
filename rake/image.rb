@@ -3,6 +3,8 @@
 require 'kamaze/version'
 require 'kamaze/docker_image'
 
+autoload :YAML, 'yaml'
+
 Kamaze::DockerImage.new do |config|
   config.name    = 'kamaze/alpine_server'
   config.version = Kamaze::Version.new('image/version.yml').freeze
@@ -10,6 +12,12 @@ Kamaze::DockerImage.new do |config|
   config.verbose = false
   config.run_as  = File.basename(config.name)
   config.ssh     = { enabled: true }
+
+  Pathname.new(__dir__).join('config/ssh.yml').tap do |file|
+    if file.file?
+      config.ssh = YAML.safe_load(file.read, [Symbol]).merge(config.ssh)
+    end
+  end
 
   config.commands.merge!(
     stop: ['stop', '-t', 20, '%<run_as>s'],

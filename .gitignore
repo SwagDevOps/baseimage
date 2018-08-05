@@ -2,9 +2,11 @@
 /**/vendor/
 /.*
 /image/Dockerfile
+/rake/config/*
 /ssh/*
 !/.env
 !/.gitignore
 !/.rspec
 !/.rubocop.yml
+!/rake/config/*.dist
 !/ssh/README.md

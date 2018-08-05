@@ -1,0 +1,22 @@
+# vim: ft=yaml
+---
+:executable: ssh # Path to executable, or name.
+:port: 22
+:user: root
+:test: [':'] # test command used during timeout/wait
+:timeout: 10 # timeout duration (seconds)
+# Following command is intended to avoid:
+# "The authenticity of host 'hostname' can't be established"
+# but is specific to OpenSSH.
+:command: [
+  '%<executable>s',
+  '-o', 'UserKnownHostsFile=/dev/null',
+  '-o', 'StrictHostKeyChecking=no',
+  '-o', 'LogLevel=ERROR',
+  '-p', '%<port>s',
+  '%<user>s@%<host>s',
+]
+
+# Local Variables:
+# mode: YAML
+# End:
