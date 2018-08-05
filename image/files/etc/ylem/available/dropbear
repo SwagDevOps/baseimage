@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 # frozen_string_literal: true
+# rubocop:disable Style/AsciiComments
 
 # Setup ``dropbear`` server
 #
@@ -20,7 +21,9 @@
 # to the corresponding users ``.ssh`` directories.
 #
 # ```sh
-# yes | ssh-keygen -t rsa -b 4096 -N '' -f host_rsa.pem -m PEM -C "your_email@example.com"
+# yes | ssh-keygen \
+#      -t rsa -b 4096 -N '' \
+#     -f host_rsa.pem -m PEM -C "your_email@example.com"
 # ```
 class DropbearSetup
   autoload :Etc, 'etc'
@@ -59,7 +62,13 @@ class DropbearSetup
   def call
     self.to_path.tap do |directory|
       utils.mkdir_p(directory)
-      Dir.chdir(directory) { convert_pem.gen_key.authorize }
+      Dir.chdir(directory) do
+        convert_pem
+        gen_key
+
+        apply_perms
+        authorize
+      end
     end
 
     self
@@ -74,7 +83,7 @@ class DropbearSetup
     cmd = ['dropbearconvert', 'openssh', 'dropbear', host_pem, host_key]
 
     if host_pem.file? and host_pem.readable?
-      utils.chmod(0600, host_pem)
+      utils.chmod(0o600, host_pem)
       sh(*cmd.map(&:to_s))
     end
 
@@ -93,55 +102,77 @@ class DropbearSetup
     cmd = (host_key.file? ? cmd.push('-y') : cmd.push('-t', type)).map(&:to_s)
 
     sh(*cmd)
-    utils.chmod(0600, host_key)
+    utils.chmod(0o600, host_key)
 
+    self
+  end
+
+  # @return self
+  def apply_perms
+    utils.chmod(0o700, 'allow')
+    Dir.glob('allow/*').each { |file| utils.chmod(0o600, file) }
+  rescue StandardError # rubocop:disable Lint/HandleExceptions
+  ensure
     self
   end
 
   # Dispatch authorized_keys files.
   #
   # @return [self]
-  def authorize
-    Dir.glob('allow/*').each { |file| utils.chmod(0600, file) }
-       .map do |file|
-      begin
-        user = Etc.getpwnam(Pathname.new(file).basename.to_s)
-        [file, user]
-      rescue ArgumentError => e
-        $stderr.puts(e.message)
-      end
-    end.compact.to_h.each do |file, user|
+  def authorize # rubocop:disable Metrics/MethodLength
+    authorizables.each do |file, user|
       begin
         Pathname.new("#{user.dir}/.ssh/authorized_keys").tap do |target|
           utils.mkdir_p(target.dirname)
-          utils.cp(file, target, verbose: true)
+          utils.cp(file, target)
+
+          utils.chmod(0o600, target)
           utils.chown(user.uid, user.gid, target)
         end
       rescue StandardError => e
-        $stderr.puts(e.message)
+        warn(e.message)
       end
     end
 
     self
   end
 
+  # @return [Hash{String => Etc::Passwd}]
+  def authorizables
+    Dir.glob('allow/*').map do |file|
+      begin
+        user = Etc.getpwnam(Pathname.new(file).basename.to_s)
+        [file, user]
+      rescue ArgumentError => e
+        warn(e.message)
+      end
+    end.compact.to_h
+  end
+
   private
 
   # @return [FileUtils]
   def utils
-    FileUtils
+    FileUtils::Verbose
   end
 
-  # @raise [RuntimeError]
+  # @raise [Errno::EOPNOTSUPP]
+  # @return [Boolean]
   def sh(*command)
-    $stderr.puts(Shellwords.join(command))
+    warn(Shellwords.join(command))
 
-    unless system(*command)
-      message = "#{Shellwords.join(command)} [#{$?.exitstatus}]"
+    system(*command).tap do |res|
+      return res if res
 
-      raise RuntimeError, message
+      "#{Shellwords.join(command)} [#{$CHILD_STATUS.exitstatus}]".tap do |s|
+        raise Errno::EOPNOTSUPP, s
+      end
     end
   end
 end
 
-DropbearSetup.new.call if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
+  DropbearSetup.new.call
+end
+
+# rubocop:enable Style/AsciiComments
