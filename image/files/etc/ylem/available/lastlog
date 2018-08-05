@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+main() {
+    set -eu
+
+    (set -eu
+     f=/var/log/lastlog
+     test -f "$f" || touch "$f")
+}
+
+main
