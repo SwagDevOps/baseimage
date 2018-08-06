@@ -1,7 +1,7 @@
 ---
-runner:
+service:
   command:
   privileged: true
-logger:
+loggerd:
   privileged: true
   command: ['/sbin/svlogd', '-tt', '%<dir>s']
