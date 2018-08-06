@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-runner(['chpst', '-u', 'root:syslog', '--',
-        '/sbin/syslogd', '-Dnb10', '-s200']).call
+service(['chpst', '-u', 'root:syslog', '--',
+         '/sbin/syslogd', '-Dnb10', '-s200']).call
 
 # Local Variables:
 # mode: ruby
