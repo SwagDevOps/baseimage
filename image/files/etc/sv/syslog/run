@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-service(['/sbin/syslogd', '-Dnb10', '-s200'], group: :syslog).call
+service('/sbin/syslogd -Dnb10 -s200', group: :syslog).call
 
 # Local Variables:
 # mode: ruby
