@@ -6,7 +6,17 @@ autoload :Tenjin, 'tenjin'
 
 task default: [:build]
 
-task "#{image.path}/Dockerfile" do |task|
+image.tap do |c|
+  image.singleton_class.__send__(:define_method, :vendor) do
+    Pathname.new("#{c.path}/files/build/vendor")
+  end
+
+  image.singleton_class.__send__(:define_method, :dockerfile) do
+    Pathname.new("#{c.path}/Dockerfile")
+  end
+end
+
+task image.dockerfile do |task|
   image.version.to_h.merge(image: image).tap do |context|
     Tenjin::Engine
       .new(cache: false)
@@ -15,9 +25,9 @@ task "#{image.path}/Dockerfile" do |task|
   end
 end
 
-task "#{image.path}/files/build/vendor" do |task|
+task image.vendor do |task, args|
   Dir.chdir(image.path) do
-    Vendorer.new(update: false).tap do |v|
+    Vendorer.new(update: args.to_a.include?('update')).tap do |v|
       config_locations = ['Vendorfile.rb', 'Vendorfile']
       config_location = config_locations.detect { |f| File.exist?(f) }
 
@@ -26,11 +36,16 @@ task "#{image.path}/files/build/vendor" do |task|
   end
 end
 
-["#{image.path}/Dockerfile",
- "#{image.path}/files/build/vendor"].each do |name|
+[image.dockerfile, image.vendor].each do |name|
   CLOBBER.push(name)
 
   task 'pre_build' do
     Rake::Task[name].invoke
   end
+end
+
+desc 'Build image (with update)'
+task 'build:update' do
+  Rake::Task[image.vendor].invoke('update')
+  Rake::Task[:build].invoke
 end
