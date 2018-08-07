@@ -1,14 +1,17 @@
 #!/usr/bin/env sh
 
+BUILD_RESULT_DIR=/build/out
+
 # @see https://github.com/Yelp/dumb-init
-run() {
+main() {
     (
         set -eu
 
-        cd /build/vendor/
+        cd "${BUILD_VENDOR_DIR}/dumb-init"
+        make
         chmod +x dumb-init
         mv -v dumb-init /sbin/init
     )
 }
 
-run
+main

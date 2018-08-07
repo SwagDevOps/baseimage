@@ -12,9 +12,9 @@
       ref: 'c3b8272'
     }
   ],
-  [:file, 'dumb-init'] => [
-    'https://github.com/Yelp/dumb-init/releases/download/v%<version>s/dumb-init_%<version>s_amd64' % {
-      version: '1.2.2'
+  [:folder, 'dumb-init'] => [
+    'https://github.com/Yelp/dumb-init/', {
+      ref: 'v1.2.2'
     }
   ],
   [:file, 'runit-scripts.tar.gz'] => [
