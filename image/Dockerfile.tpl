@@ -23,17 +23,18 @@ ENV INITRD=no \
     SVWAIT=4
 
 RUN apk add --no-cache \
-        bash bash-completion htop screen \
-        runit busybox file tzdata \
+        bash bash-completion htop multitail screen \
+        runit busybox libcap file tzdata \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
         dropbear dropbear-convert dropbear-scp \
         ruby ruby-bundler \
-        ruby-bigdecimal ruby-etc ruby-fiddle ruby-json && \
+        ruby-bigdecimal ruby-etc ruby-fiddle ruby-json \
+        make gcc musl-dev && \
     rm -f /sbin/runit /etc/runit
 
 COPY files /
-RUN /build/build.sh
+RUN /build/build
 
 ENTRYPOINT ["/sbin/init", "-v", "--", "ylem", "start", "-v", "--"]
 CMD ["/sbin/runsvdir-start"]

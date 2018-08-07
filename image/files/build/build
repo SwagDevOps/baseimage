@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# frozen_string_literal: true
+
+require 'English'
+require 'pathname'
+require 'yaml'
+
+# Builder, executes build scripts sequentially.
+#
+# Exits with last ``exitstatus`` when a build script encounter a failure.
+class Builder
+  attr_reader :scripts_path
+  attr_reader :env_file
+
+  def initialize(scripts_path, env_file = nil)
+    @scripts_path = Pathname.new(scripts_path).realpath
+
+    if env_file # rubocop:disable Style/GuardClause
+      @env_file = Pathname.new(env_file).realpath
+      load_env
+    end
+  end
+
+  def call # rubocop:disable Metrics/MethodLength
+    self.scripts.tap do |scripts|
+      scripts.each_with_index do |script, index|
+        "Build #{index + 1}/#{scripts.size} : #{script.basename}"
+          .tap { |s| $stdout.puts(s) }
+
+        system(script.to_s).tap do |res|
+          next if res
+
+          exit($CHILD_STATUS.exitstatus)
+        end
+      end
+    end
+
+    self
+  end
+
+  # Get scripts.
+  #
+  # @return [Array<Pathname>]
+  def scripts
+    Dir.glob("#{scripts_path}/*")
+       .map { |f| Pathname.new(f).realpath.dirname.join(f) }
+       .keep_if { |f| f.file? and f.readable? and f.executable? }
+       .sort
+  end
+
+  protected
+
+  # Load environment variables.
+  #
+  # @return [self]
+  def load_env
+    if env_file
+      YAML.safe_load(env_file.read)
+          .each { |k, v| ENV[k.to_s] = v.to_s }
+    end
+
+    self
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  Dir.chdir(__dir__) do
+    Builder.new('scripts', 'env.yml').call
+  end
+end
