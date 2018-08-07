@@ -17,11 +17,15 @@ end
 
 group :development do
   gem 'kamaze-project', '~> 1.0', '>= 1.0.3'
-  gem 'rubocop', '~> 0.56'
+  gem 'rubocop', '~> 0.58'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
+  # repl ---------------------------------
+  gem 'interesting_methods', '~> 0.1'
+  gem 'pry', '~> 0.11'
+  gem 'pry-coolline', '~> 0.2'
 end
 
 group :test do
-  gem 'rspec', '~> 3.7'
+  gem 'rspec', '~> 3.8'
   gem 'serverspec', '~> 2.41'
 end
