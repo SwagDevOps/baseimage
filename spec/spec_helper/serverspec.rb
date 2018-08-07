@@ -4,7 +4,12 @@ require_relative 'image'
 require 'serverspec'
 require 'net/ssh'
 
-image.ssh.wait.network.fetch(0).tap do |host|
+self.image.tap do |image|
+  unless image.running?
+    image.rm
+    image.start
+  end
+end.ssh.wait.network.fetch(0).tap do |host|
   set :backend, :ssh
   set :os, family: :alpine
   set :host, host
