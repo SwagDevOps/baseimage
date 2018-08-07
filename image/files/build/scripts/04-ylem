@@ -4,7 +4,7 @@ run() {
     (
         set -eu
 
-        cd /build/vendor/ylem
+        cd ${BUILD_VENDOR_DIR}/ylem
         gem build *.gemspec
         gem install *.gem \
             --norc \

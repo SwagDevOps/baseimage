@@ -10,7 +10,7 @@ install_scripts() {
 run() {
     (
         set -eu
-        cd /build/vendor/
+        cd ${BUILD_VENDOR_DIR}
 
         install_scripts
         mkdir -p "${SVDIR}"
