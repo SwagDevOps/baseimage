@@ -9,10 +9,21 @@ require 'yaml'
 # Builder, executes build scripts sequentially.
 #
 # Exits with last ``exitstatus`` when a build script encounter a failure.
+#
+# Environment (described as an Hash)
+# can be loaded from given YAML ``env_file``.
+#
+# Sample of use:
+#
+# ```ruby
+# Builder.new('scripts', 'env.yml').call
+# ```
 class Builder
   attr_reader :scripts_path
   attr_reader :env_file
 
+  # @param [String] scripts_path
+  # @param [String|nil] env_file
   def initialize(scripts_path, env_file = nil)
     @scripts_path = Pathname.new(scripts_path).realpath
 
