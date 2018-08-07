@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/SwagDevOps/kamaze-docker_image.git
-  revision: d32c7bb02a429fccb9c0e28a08bfef394e6c3eb4
+  revision: 9205e45e9c4780cb4b45fc4b9374dd8bbbe7515d
   branch: master
   specs:
     kamaze-docker_image (0.0.1)
@@ -88,7 +88,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.9.0)
+    ruby-progressbar (1.10.0)
     rugged (0.27.2)
     serverspec (2.41.3)
       multi_json
