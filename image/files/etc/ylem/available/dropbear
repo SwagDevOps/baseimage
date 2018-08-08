@@ -51,6 +51,18 @@ class DropbearSetup
 
     @host_key = Pathname.new('host_rsa')
     @host_pem = Pathname.new("#{@host_key}.pem")
+
+    @futils = FileUtils::Verbose
+  end
+
+  # Get commands.
+  #
+  # #return [Hash{Symbol => Array<Object>}]
+  def commands
+    {
+      convert: ['dropbearconvert', 'openssh', 'dropbear', host_pem, host_key],
+      generate: ['dropbearkey', '-f', host_key, '-t', :rsa],
+    }
   end
 
   # @return [String]
@@ -61,7 +73,7 @@ class DropbearSetup
   # @return [self]
   def call
     self.to_path.tap do |directory|
-      utils.mkdir_p(directory)
+      futils.mkdir_p(directory)
       Dir.chdir(directory) do
         convert_pem
         gen_key
@@ -74,17 +86,32 @@ class DropbearSetup
     self
   end
 
+  # @return [Hash{Pathname => Etc::Passwd}]
+  def authorizables
+    Dir.glob('allow/*')
+       .map { |f| Pathname.new(f) }.keep_if(&:file?).map do |file|
+      begin
+        [file, Etc.getpwnam(file.basename.to_s)]
+      rescue ArgumentError => e
+        warn(e.message)
+      end
+    end.compact.to_h
+  end
+
   protected
+
+  # @return [FileUtils]
+  attr_accessor :futils
 
   # Convert pem file.
   #
   # @return [self]
   def convert_pem
-    cmd = ['dropbearconvert', 'openssh', 'dropbear', host_pem, host_key]
-
-    if host_pem.file? and host_pem.readable?
-      utils.chmod(0o600, host_pem)
-      sh(*cmd.map(&:to_s))
+    commands.fetch(:convert).tap do |cmd|
+      if host_pem.file? and host_pem.readable?
+        futils.chmod(0o600, host_pem)
+        sh(*cmd.map(&:to_s))
+      end
     end
 
     self
@@ -97,23 +124,28 @@ class DropbearSetup
   #
   # @see http://manpages.ubuntu.com/manpages/precise/man8/dropbearkey.8.html
   # @see https://www.mail-archive.com/dropbear@ucc.asn.au/msg01689.html
-  def gen_key(type = :rsa)
-    cmd = ['dropbearkey', '-f', host_key]
-    cmd = (host_key.file? ? cmd.push('-y') : cmd.push('-t', type)).map(&:to_s)
+  def gen_key
+    commands.fetch(:generate).tap do |cmd|
+      cmd.push('-y') if host_key.file?
 
-    sh(*cmd)
-    utils.chmod(0o600, host_key)
+      sh(*cmd.map(&:to_s))
+      futils.chmod(0o600, host_key)
+    end
 
     self
   end
 
   # @return self
   def apply_perms
-    utils.chmod(0o700, 'allow')
-    Dir.glob('allow/*').each { |file| utils.chmod(0o600, file) }
-  rescue StandardError # rubocop:disable Lint/HandleExceptions
-  ensure
-    self
+    futils.chmod(0o700, 'allow') if Pathname.new('allow').directory?
+
+    authorizables.keys.each do |file|
+      begin
+        futils.chmod(0o600, file) if file.file?
+      rescue StandardError => e
+        warn(e.message)
+      end
+    end
   end
 
   # Dispatch authorized_keys files.
@@ -132,35 +164,16 @@ class DropbearSetup
     self
   end
 
-  # @return [Hash{String => Etc::Passwd}]
-  def authorizables
-    Dir.glob('allow/*').map do |file|
-      begin
-        user = Etc.getpwnam(Pathname.new(file).basename.to_s)
-        [file, user]
-      rescue ArgumentError => e
-        warn(e.message)
-      end
-    end.compact.to_h
-  end
-
-  private
-
-  # @return [FileUtils]
-  def utils
-    FileUtils::Verbose
-  end
-
   # @param [Pathname|String] file
   # @param [Pathname] target
   # @param [Etc::Passwd] user
   def copy_auth(file, target, user = nil)
-    utils.mkdir_p(target.dirname)
-    utils.chmod(0o700, target.dirname)
-    utils.cp(file, target)
+    futils.mkdir_p(target.dirname)
+    futils.chmod(0o700, target.dirname)
+    futils.cp(file, target)
 
-    utils.chmod(0o600, target)
-    utils.chown(user.uid, user.gid, target) if user
+    futils.chmod(0o600, target)
+    futils.chown(user.uid, user.gid, target) if user
   end
 
   # @raise [Errno::EOPNOTSUPP]
