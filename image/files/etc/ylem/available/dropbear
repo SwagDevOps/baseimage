@@ -119,16 +119,11 @@ class DropbearSetup
   # Dispatch authorized_keys files.
   #
   # @return [self]
-  def authorize # rubocop:disable Metrics/MethodLength
+  def authorize
     authorizables.each do |file, user|
       begin
-        Pathname.new("#{user.dir}/.ssh/authorized_keys").tap do |target|
-          utils.mkdir_p(target.dirname)
-          utils.cp(file, target)
-
-          utils.chmod(0o600, target)
-          utils.chown(user.uid, user.gid, target)
-        end
+        Pathname.new("#{user.dir}/.ssh/authorized_keys")
+                .tap { |target| copy_auth(file, target, user) }
       rescue StandardError => e
         warn(e.message)
       end
@@ -154,6 +149,18 @@ class DropbearSetup
   # @return [FileUtils]
   def utils
     FileUtils::Verbose
+  end
+
+  # @param [Pathname|String] file
+  # @param [Pathname] target
+  # @param [Etc::Passwd] user
+  def copy_auth(file, target, user = nil)
+    utils.mkdir_p(target.dirname)
+    utils.chmod(0o700, target.dirname)
+    utils.cp(file, target)
+
+    utils.chmod(0o600, target)
+    utils.chown(user.uid, user.gid, target) if user
   end
 
   # @raise [Errno::EOPNOTSUPP]
