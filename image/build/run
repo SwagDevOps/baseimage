@@ -6,7 +6,7 @@ require 'English'
 require 'pathname'
 require 'yaml'
 
-# Builder, executes build scripts sequentially.
+# Runner, executes scripts sequentially.
 #
 # Exits with last ``exitstatus`` when a build script encounter a failure.
 #
@@ -16,9 +16,9 @@ require 'yaml'
 # Sample of use:
 #
 # ```ruby
-# Builder.new('scripts', 'env.yml').call
+# Runner.new('scripts', 'env.yml').call
 # ```
-class Builder
+class Runner
   attr_reader :scripts_path
   attr_reader :env_file
 
@@ -77,6 +77,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   Dir.chdir(__dir__) do
-    Builder.new('scripts', 'env.yml').call
+    Runner.new('scripts', 'env.yml').call
   end
 end

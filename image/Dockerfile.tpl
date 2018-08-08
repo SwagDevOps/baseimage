@@ -34,8 +34,9 @@ RUN apk add --no-cache \
     rm -f /sbin/runit /etc/runit
 
 COPY build /build
-RUN /build/build
+RUN /build/run
 COPY files /
+RUN rsync -rua /etc/skel/.*[:alnum:]* /root/
 
 ENTRYPOINT ["/boot/run"]
 CMD ["/sbin/runsvdir-start"]
