@@ -33,10 +33,11 @@ RUN apk add --no-cache \
         make gcc musl-dev && \
     rm -f /sbin/runit /etc/runit
 
-COPY files /
+COPY build /build
 RUN /build/build
+COPY files /
 
-ENTRYPOINT ["/sbin/init", "-v", "--", "ylem", "start", "-v", "--"]
+ENTRYPOINT ["/boot/run"]
 CMD ["/sbin/runsvdir-start"]
 
 # Local Variables:

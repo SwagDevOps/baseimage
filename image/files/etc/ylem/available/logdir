@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+main() {
+    set -eu
+    LOGDIR=/var/log
+
+    lastlog
+    secure
+}
+
+# Create lastlog file
+#
+# lastlog - reports the most recent login of all users or of a given user
+# @see https://linux.die.net/man/8/lastlog
+lastlog() {
+    (set -eu
+     f="${LOGDIR}/lastlog"
+
+     touch "$f"
+     chown root:utmp -v "$f"
+    )
+}
+
+# Create secure file (depending on syslog.conf)
+#
+# The authpriv file has restricted access (640)
+secure() {
+    (set -eu
+     f="${LOGDIR}/secure"
+
+     cat /etc/syslog.conf 2>/dev/null | grep -qE "\s+${f}\s*$" || exit 0
+     touch "$f"
+     chmod 640 -v "$f"
+    )
+}
+
+main

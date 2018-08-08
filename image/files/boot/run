@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+exec /sbin/init -v --rewrite 15:3 -- ylem start -v -- "$@"
