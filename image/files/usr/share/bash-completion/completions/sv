@@ -1,0 +1,74 @@
+# vim: ft=sh
+
+test -n "$SVDIR" || return 0
+complete -F _sv_complete sv
+
+_sv_complete() {
+    COMPREPLY=()
+
+    local curr="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    test "${prev}" == 'sv' && {
+        COMPREPLY=( $(compgen -W "$(_sv_commands)" -- "${curr}") )
+        return 0
+    }
+
+    echo "${prev}" | grep -Eq -- '-(v|w[0-9]+)' && {
+        COMPREPLY=( $(compgen -W "$(_sv_commands)" -- "${curr}") )
+        return 0
+    }
+
+    echo "${COMP_WORDS[COMP_CWORD-2]} ${prev}" | grep -Eq -- '-w [0-9]+' && {
+        COMPREPLY=( $(compgen -W "$(_sv_commands)" -- "${curr}") )
+        return 0
+    }
+
+    echo "${prev}" | grep -Eq -- "$(_sv_commands | sed 's#\s\+#|#g')" && {
+        _sv_dirs_match "${curr}" > /dev/null && {
+            local func='_sv_dirs'
+        } || {
+            local func='_sv_services'
+        }
+
+        COMPREPLY=( $(compgen -W "$($func)" -- "${curr}") )
+        return 0
+    }
+}
+
+# Get services
+_sv_services() {
+    (set -eu
+     echo $(ls -A --color=no -- "$SVDIR"))
+}
+
+# Get services (as directories)
+_sv_dirs() {
+    (set -eu
+     ls -Ad --color=no -- "$SVDIR"/* | sed 's#\s\+#\n#')
+}
+
+# Denote if given patch is matching a service.
+_sv_dirs_match() {
+    local matcher=${1:-$}
+    _sv_dirs | \
+        while read line; do
+            echo "$line" | grep -Eq -- "^${matcher}" && {
+                echo 'yes'
+                return 0
+            }
+        done
+}
+
+# Get commands
+_sv_commands() {
+    echo "status up down once \
+         pause cont hup alarm interrupt quit 1 2 term kill exit \
+         start stop reload restart shutdown \
+         force-stop force-reload force-restart \
+         force-shutdown try-restart check"
+}
+
+# Local Variables:
+# mode: sh
+# End:
