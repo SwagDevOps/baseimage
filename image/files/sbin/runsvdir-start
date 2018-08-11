@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-SVDIR=${SVDIR:-/service}
-
 set -eu
 
 exec runsvdir -P "${SVDIR}" < /dev/null
