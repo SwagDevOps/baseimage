@@ -4,7 +4,7 @@
 {
   [:folder, 'sv-utils'] => [
     'https://github.com/SwagDevOps/sv-utils', {
-      ref: 'cd3a99a'
+      ref: '0cd48c0'
     }
   ],
   [:folder, 'ylem'] => [
