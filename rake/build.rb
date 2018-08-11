@@ -6,13 +6,13 @@ autoload :Tenjin, 'tenjin'
 
 task default: [:build]
 
-image.tap do |c|
-  image.singleton_class.__send__(:define_method, :vendor) do
-    Pathname.new("#{c.path}/build/vendor")
+self.image.tap do |image|
+  self.image.singleton_class.__send__(:define_method, :vendor) do
+    Pathname.new("#{image.path}/build/vendor")
   end
 
-  image.singleton_class.__send__(:define_method, :dockerfile) do
-    Pathname.new("#{c.path}/Dockerfile")
+  self.image.singleton_class.__send__(:define_method, :dockerfile) do
+    Pathname.new("#{image.path}/Dockerfile")
   end
 end
 
