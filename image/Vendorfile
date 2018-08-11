@@ -17,16 +17,7 @@
       ref: 'v1.2.2'
     }
   ],
-  [:file, 'runit-scripts.tar.gz'] => [
-    'https://api.github.com/repos/dockage/runit-scripts/tarball'
-  ]
-}.tap do |packages|
-  packages.each do |k, v|
-    Pathname.new('build/vendor').freeze.tap do |dir|
-      public_send(k.fetch(0), *([dir.join(k.fetch(1))] + v))
-    end
-  end
-end
+}.each { |k, v| public_send(k.fetch(0), *([vendor.join(k.fetch(1))] + v)) }
 
 # Local Variables:
 # mode: ruby

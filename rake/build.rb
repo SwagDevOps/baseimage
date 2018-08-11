@@ -8,7 +8,7 @@ task default: [:build]
 
 image.tap do |c|
   image.singleton_class.__send__(:define_method, :vendor) do
-    Pathname.new("#{c.path}/files/build/vendor")
+    Pathname.new("#{c.path}/build/vendor")
   end
 
   image.singleton_class.__send__(:define_method, :dockerfile) do
@@ -26,18 +26,19 @@ task image.dockerfile do |task|
 end
 
 task image.vendor do |task, args|
-  Dir.chdir(image.path) do
+  ['Vendorfile.rb', 'Vendorfile'].map { |f| image.path.join(f) }.tap do |files|
     Vendorer.new(update: args.to_a.include?('update')).tap do |v|
-      config_locations = ['Vendorfile.rb', 'Vendorfile']
-      config_location = config_locations.detect { |f| File.exist?(f) }
+      self.image.vendor.tap do |dir|
+        v.singleton_class.__send__(:define_method, :vendor) { dir }
+      end
 
-      v.parse(File.read(config_location || config_locations.last))
+      (files.detect(&:file?) || files.last).tap { |f| v.parse(f.read) }
     end
   end
 end
 
 [image.dockerfile, image.vendor].each do |name|
-  CLOBBER.push(name)
+  CLOBBER.push(name.to_s)
 
   task 'pre_build' do
     Rake::Task[name].invoke
