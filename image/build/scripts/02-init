@@ -1,17 +1,14 @@
-#!/usr/bin/env sh
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-BUILD_RESULT_DIR=/build/out
+require 'fileutils'
+self.extend(FileUtils::Verbose)
 
-# @see https://github.com/Yelp/dumb-init
-main() {
-    (
-        set -eu
+ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
+  Dir.chdir("#{dir}/dumb-init") do
+    system('make')
 
-        cd "${BUILD_VENDOR_DIR}/dumb-init"
-        make
-        chmod +x dumb-init
-        mv -v dumb-init /sbin/init
-    )
-}
-
-main
+    chmod('+x', 'dumb-init')
+    mv('dumb-init', '/sbin/init')
+  end
+end
