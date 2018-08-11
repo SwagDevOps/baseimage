@@ -5,3 +5,7 @@ service:
 loggerd:
   privileged: true
   command: ['/sbin/svlogd', '-tt', '%<dir>s']
+control:
+  futils: 'quiet'
+  method: 'cp'
+  paths: ['/etc/service']

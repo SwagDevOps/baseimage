@@ -19,7 +19,7 @@ ENV INITRD=no \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     EDITOR=vim \
-    SVDIR=/service \
+    SVDIR=/var/service \
     SVWAIT=4
 
 RUN apk add --no-cache \
