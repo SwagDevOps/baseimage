@@ -8,61 +8,15 @@
 #
 # located in ``BUILD_VENDOR_DIR`` directory.
 
-if __FILE__ == $PROGRAM_NAME
-  {
-    'ylem': '/sbin',
-    'sv-utils': '/sbin'
-  }.tap do |packages|
-    self.singleton_class.__send__(:define_method, :run) do
-      self.extend(GemInstall)
+require 'build'
 
-      ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
-        packages.sort.to_h.each { |k, v| install("#{dir}/#{k}", v) }
-      end
-    end
+{
+  'ylem': '/sbin',
+  'sv-utils': '/sbin'
+}.tap do |packages|
+  ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
+    packages.sort
+            .to_h
+            .each { |k, v| Build::Gem.install("#{dir}/#{k}", v) }
   end
 end
-
-# Provide install method, to install gem from a given directory.
-module GemInstall
-  autoload :Pathname, 'pathname'
-  autoload :Shellwords, 'shellwords'
-
-  protected
-
-  def install(dir, bin_dir = '/usr/local/bin')
-    build(dir).tap do |gem|
-      ['--no-user-install', '--no-post-install-message', '--no-suggestions',
-       '--no-document', '--clear-sources',
-       '--no-wrappers', '--env-shebang', '--format-executable',
-       '--conservative', '--minimal-deps'].sort.tap do |options|
-        ['install', gem, '--bindir', bin_dir]
-          .push(*options)
-          .tap { |cmd| gem_cmd(*cmd) }
-      end
-    end
-  end
-
-  def build(dir)
-    gem_name = Pathname.new(dir).basename
-    Dir.chdir(dir) do
-      gem_cmd('build', "#{gem_name}.gemspec")
-
-      Dir.glob("#{gem_name}-*.gem").map { |fp| Pathname.new(fp) }
-         .fetch(0).realpath
-    end
-  end
-
-  def gem_cmd(*cmd)
-    require 'English'
-
-    ['gem'].push(*cmd).push('--norc').compact.map(&:to_s).tap do |command|
-      warn(Shellwords.join(command))
-
-      system(*command)
-        .tap { |res| exit($CHILD_STATUS.exitstatus) unless res }
-    end
-  end
-end
-
-run if __FILE__ == $PROGRAM_NAME
