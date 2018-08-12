@@ -1,47 +1,13 @@
-#!/usr/bin/env sh
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-set -eu
+require 'build'
 
-main() {
-    (
-        group=syslog
+Build::UserManager.new.tap do |u|
+  'root'.tap { |user| u.change_shell(user, 'bash') }
 
-        getent group "${group}" || create_system_group "${group}"
-        set_perms '/var/log' "root:${group}" 775
-    )
-}
-
-# Create a system user
-#
-# create_system_user "${name}" "${home}"
-create_system_user() {
-    local name=$1
-    local home=$2
-
-    create_system_group "${name}"
-    adduser -HS "${name}" -h "${home}" \
-            -G "${name}" -g "${name}" -s "$(which nologin)"
-}
-
-# Create a system group
-#
-# create_system_group "${name}"
-create_system_group() {
-    local name=$1
-
-    addgroup -S "${name}"
-}
-
-# Apply permissions
-#
-# set_perms "${path}" "${owner}" "${mode}"
-set_perms() {
-    local path=$1
-    local owner=$2
-    local mode=$3
-
-    chown "${owner}" "${path}"
-    chmod "${mode}" "${path}"
-}
-
-main
+  'syslog'.tap do |group|
+    u.create_system_group(group)
+    u.apply_perms('/var/log', "root:#{group}", 0o775)
+  end
+end
