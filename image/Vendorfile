@@ -9,7 +9,7 @@
   ],
   [:folder, 'ylem'] => [
     'https://github.com/SwagDevOps/ylem', {
-      ref: 'c3b8272'
+      ref: '339c60c'
     }
   ],
   [:folder, 'dumb-init'] => [
