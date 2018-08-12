@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'build'
 require 'fileutils'
 self.extend(FileUtils::Verbose)
 
 ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
   Dir.chdir("#{dir}/dumb-init") do
-    system('make')
+    Build.sh('make')
 
     chmod('+x', 'dumb-init')
     mv('dumb-init', '/sbin/init')
