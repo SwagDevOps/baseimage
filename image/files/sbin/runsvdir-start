@@ -1,5 +1,14 @@
-#!/usr/bin/env sh
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-set -eu
+require 'shellwords'
 
-exec runsvdir -P "${SVDIR}" < /dev/null
+ENV['SVDIR'].tap do |svdir|
+  if svdir.to_s.empty?
+    warn('SVDIR must be set')
+    exit(Errno::ECANCELED::Errno) # 125
+  end
+
+  Shellwords.join(['runsvdir', '-P', svdir])
+            .tap { |cmd| exec("#{cmd} < /dev/null") }
+end
