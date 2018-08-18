@@ -1,0 +1,10 @@
+# vim: ft=muttrc
+
+set folder=/var/spool/mail
+set mbox=+/
+set header_cache=~/.cache/mutt
+set editor=vim
+
+# Local Variables:
+# mode: conf
+# End:
