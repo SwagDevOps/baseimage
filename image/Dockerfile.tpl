@@ -29,7 +29,7 @@ RUN apk add --no-cache \
         vim less coreutils sed procps \
         dropbear dropbear-convert dropbear-scp \
         ruby ruby-bundler \
-        ruby-bigdecimal ruby-etc ruby-fiddle ruby-json \
+        ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json \
         make gcc musl-dev && \
     rm -f /sbin/runit /etc/runit
 

@@ -31,19 +31,19 @@ class Build::UserManager
   # Create a system user
   #
   # create_system_user "${name}" "${home}"
-  def create_system_user(name, home_dir)
+  def create_system_user(name, home_dir, shell = 'nologin')
     create_system_group(name)
     sh('adduser', '-HS', name,
        '-h', home_dir,
        '-G', name, '-g', name,
-       '-s', Open3.capture2e('which', 'nologin')[0].rstrip)
+       '-s', Open3.capture2e('which', shell.to_s)[0].rstrip)
   end
 
   # Apply permissions
   #
   # apply_perms "${path}" "${owner}" "${mode}"
   def apply_perms(paths, owner, mode = nil)
-    paths.tap do |paths| # rubocop:disable Lint/ShadowingOuterLocalVariable
+    paths.tap do
       user, group = owner.to_s.split(':')
 
       futils.chown(user, group, paths)

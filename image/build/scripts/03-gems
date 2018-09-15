@@ -1,22 +1,21 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# This script installs the following gems:
-#
-# * sv-utils
-# * ylem
+# This script installs gems with options from ``../config/gems.yml``
 #
 # located in ``BUILD_VENDOR_DIR`` directory.
 
 require 'build'
+require 'yaml'
+require 'pathname'
 
-{
-  'ylem': '/sbin',
-  'sv-utils': '/sbin'
-}.tap do |packages|
-  ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
-    packages.sort
-            .to_h
-            .each { |k, v| Build::Gem.install("#{dir}/#{k}", v) }
+Pathname.new(__dir__).join('../config/gems.yml').tap do |fp|
+  YAML.safe_load(fp.read).each do |name, options|
+    ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
+      options = Hash[options.map { |(k, v)| [k.to_sym, v] }]
+
+      (options[:local] ? "#{dir}/#{name}" : name)
+        .tap { |gem| Build::Gem.install(gem, options) }
+    end
   end
 end

@@ -13,11 +13,15 @@ module Build::Shell
   def sh(*cmd)
     require 'English'
 
+    mutex = Mutex.new
+
     cmd.compact.map(&:to_s).tap do |command|
       warn(command.size == 1 ? command : Shellwords.join(command))
 
-      system(*command)
-        .tap { |res| exit($CHILD_STATUS.exitstatus) unless res }
+      mutex.synchronize do
+        system(*command)
+          .tap { |res| exit($CHILD_STATUS.exitstatus) unless res }
+      end
     end
   end
 end

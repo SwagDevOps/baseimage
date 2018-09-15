@@ -2,11 +2,15 @@
 # frozen_string_literal: true
 
 require 'fileutils'
+require 'yaml'
+require 'pathname'
+
 self.extend(FileUtils::Verbose)
 
-[
-  '/root/.gem/',
-  '/var/cache/apk/*',
-  '/build',
-  '/etc/profile.d/color_prompt'
-].map { |g| Dir.glob(g) }.flatten.sort.each { |fp| rm_rf(fp) }
+Pathname.new(__dir__).join('../config/cleanup.yml').tap do |fp|
+  YAML.safe_load(fp.read)
+      .map { |g| Dir.glob(g) }
+      .flatten
+      .sort
+      .each { |f| rm_rf(f) }
+end
