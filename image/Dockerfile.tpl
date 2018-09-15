@@ -24,13 +24,12 @@ ENV INITRD=no \
 
 RUN apk add --no-cache \
         bash bash-completion htop multitail screen \
-        runit busybox libcap file tzdata \
+        runit dumb-init busybox libcap file tzdata \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
         dropbear dropbear-convert dropbear-scp \
         ruby ruby-bundler \
         ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json \
-        make gcc musl-dev && \
     rm -f /sbin/runit /etc/runit
 
 COPY build /build

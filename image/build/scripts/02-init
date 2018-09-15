@@ -5,11 +5,4 @@ require 'build'
 require 'fileutils'
 self.extend(FileUtils::Verbose)
 
-ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
-  Dir.chdir("#{dir}/dumb-init") do
-    Build.sh('make')
-
-    chmod('+x', 'dumb-init')
-    mv('dumb-init', '/sbin/init')
-  end
-end
+mv('/usr/bin/dumb-init', '/sbin/init')

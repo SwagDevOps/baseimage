@@ -12,11 +12,6 @@
       ref: '339c60c'
     }
   ],
-  [:folder, 'dumb-init'] => [
-    'https://github.com/Yelp/dumb-init/', {
-      ref: 'v1.2.2'
-    }
-  ],
 }.each { |k, v| public_send(k.fetch(0), *([vendor.join(k.fetch(1))] + v)) }
 
 # Local Variables:
