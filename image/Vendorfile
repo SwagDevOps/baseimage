@@ -4,12 +4,14 @@
 {
   [:folder, 'sv-utils'] => [
     'https://github.com/SwagDevOps/sv-utils', {
-      ref: '0cd48c0'
+      branch: 'master',
+      ref: '0cd48c0',
     }
   ],
   [:folder, 'ylem'] => [
     'https://github.com/SwagDevOps/ylem', {
-      ref: '339c60c'
+      branch: 'master',
+      ref: '339c60c',
     }
   ],
 }.each { |k, v| public_send(k.fetch(0), *([vendor.join(k.fetch(1))] + v)) }
