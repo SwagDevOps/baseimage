@@ -5,7 +5,7 @@
 #
 # located in ``BUILD_VENDOR_DIR`` directory.
 
-require 'build'
+require 'bohu/dsl'
 require 'yaml'
 require 'pathname'
 
@@ -14,8 +14,18 @@ Pathname.new(__dir__).join('../config/gems.yml').tap do |fp|
     ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
       options = Hash[options.map { |(k, v)| [k.to_sym, v] }]
 
-      (options[:local] ? "#{dir}/#{name}" : name)
-        .tap { |gem| Build::Gem.install(gem, options) }
+      (options[:local] ? "#{dir}/#{name}" : name).tap do |gem|
+        options.clone.delete_if{ |k,| k == :local }.tap do |kwargs|
+          if options[:local]
+            Dir.chdir(gem) do
+              gem_build(gemspec: "#{name}.gemspec")
+              gem = Dir.glob("#{Dir.pwd}/#{name}-*.gem").fetch(0)
+            end
+          end
+
+          gem_install(kwargs.merge(gem: gem))
+        end
+      end
     end
   end
 end

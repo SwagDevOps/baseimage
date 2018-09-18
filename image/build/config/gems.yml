@@ -1,11 +1,11 @@
 ---
-pry:
-  local: false
 ylem:
   version: '= 0.0.1'
   local: true
-  bin_dir: '/sbin'
+  bindir: '/sbin'
 sv-utils:
   version: '= 0.0.1'
   local: true
-  bin_dir: '/sbin'
+  bindir: '/sbin'
+pry:
+  local: false

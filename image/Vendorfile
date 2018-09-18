@@ -2,6 +2,11 @@
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
 {
+  [:folder, 'bohu'] => [
+    'https://github.com/SwagDevOps/bohu', {
+      branch: 'master',
+    }
+  ],
   [:folder, 'sv-utils'] => [
     'https://github.com/SwagDevOps/sv-utils', {
       branch: 'master',

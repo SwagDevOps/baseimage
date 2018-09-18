@@ -1,11 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'fileutils'
+require 'bohu/dsl'
 require 'yaml'
 require 'pathname'
-
-self.extend(FileUtils::Verbose)
 
 Pathname.new(__dir__).join('../config/cleanup.yml').tap do |fp|
   YAML.safe_load(fp.read)

@@ -1,13 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'build'
+require 'bohu/dsl'
 
-Build::UserManager.new.tap do |u|
-  'root'.tap { |user| u.change_shell(user, 'bash') }
+'root'.tap do |user|
+  change_shell(login: user, login_shell: '/bin/bash')
+end
 
-  'syslog'.tap do |group|
-    u.create_system_group(group)
-    u.apply_perms('/var/log', "root:#{group}", 0o775)
+'syslog'.tap do |group|
+  create_group(name: group, system: true)
+
+  '/var/log'.tap do |path|
+    chown('root', group, path)
+    chmod(0o775, path)
   end
 end
