@@ -5,8 +5,8 @@ require 'bohu/dsl'
 require 'yaml'
 require 'pathname'
 
-Pathname.new(__dir__).join('../config/cleanup.yml').tap do |fp|
-  YAML.safe_load(fp.read)
+"#{ENV.fetch('BUILD_CONFIG_DIR')}/cleanup.yml".tap do |file|
+  YAML.safe_load(Pathname.new(file).read)
       .map { |g| Dir.glob(g) }
       .flatten
       .sort
