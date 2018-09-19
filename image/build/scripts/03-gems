@@ -9,21 +9,39 @@ require 'bohu/dsl'
 require 'yaml'
 require 'pathname'
 
-Pathname.new(__dir__).join('../config/gems.yml').tap do |fp|
-  YAML.safe_load(fp.read).each do |name, options|
-    ENV.fetch('BUILD_VENDOR_DIR').tap do |dir|
-      options = Hash[options.map { |(k, v)| [k.to_sym, v] }]
+configurator = lambda do |config = nil, dir = ENV.fetch('BUILD_VENDOR_DIR')|
+  YAML.safe_load(Pathname.new(config).read).to_a.map do |name, options|
+    options = Hash[options.map { |(k, v)| [k.to_sym, v] }]
+    gem = options[:local] ? "#{dir}/#{name}" : name
+    kwargs = options.clone.delete_if{ |k,| k == :local }
 
-      (options[:local] ? "#{dir}/#{name}" : name).tap do |gem|
-        options.clone.delete_if{ |k,| k == :local }.tap do |kwargs|
-          if options[:local]
-            Dir.chdir(gem) do
-              gem_build(gemspec: "#{name}.gemspec")
-              gem = Dir.glob("#{Dir.pwd}/#{name}-*.gem").fetch(0)
-            end
-          end
+    if options[:local]
+      [
+        # where to chdir
+        "#{dir}/#{name}",
+        # build
+        { gemspec: "#{name}.gemspec" },
+        # install (globbing)
+        kwargs.merge(gem: "#{name}-*.gem"),
+      ]
+    else
+      [kwargs.merge(gem: name)]
+    end
+  end
+end
 
-          gem_install(kwargs.merge(gem: gem))
+"#{ENV.fetch('BUILD_CONFIG_DIR')}/gems.yml".tap do |file|
+  configurator.call(file).tap do |config|
+    config.each do |c|
+      if c.size == 1
+        gem_install(c[0])
+        next
+      end
+
+      Dir.chdir(c[0]) do
+        gem_build(c[1])
+        Dir.glob(c[2][:gem])[0].tap do |gem|
+          gem_install(c[2].merge(gem: gem))
         end
       end
     end
