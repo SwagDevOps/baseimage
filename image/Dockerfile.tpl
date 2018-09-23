@@ -27,10 +27,10 @@ RUN apk add --no-cache \
         runit dumb-init busybox libcap file tzdata \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
-        dropbear dropbear-convert dropbear-scp \
+        dropbear dropbear-convert \
         ruby ruby-bundler \
         ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json \
-    rm -f /sbin/runit /etc/runit
+        openssh-client git
 
 COPY build /build
 RUN /build/run
