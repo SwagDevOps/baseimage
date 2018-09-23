@@ -3,4 +3,4 @@
 
 require 'bohu/dsl'
 
-mv('/usr/bin/dumb-init', '/sbin/init')
+ln_sf('/usr/bin/dumb-init', '/sbin/init')
