@@ -111,7 +111,7 @@ GEM
     tty-editor (0.4.1)
       tty-prompt (~> 0.17.0)
       tty-which (~> 0.3.0)
-    tty-prompt (0.17.0)
+    tty-prompt (0.17.1)
       necromancer (~> 0.4.0)
       pastel (~> 0.7.0)
       timers (~> 4.0)
@@ -147,4 +147,4 @@ DEPENDENCIES
   vendorer (~> 0.1)
 
 BUNDLED WITH
-   1.16.2
+   1.16.6
