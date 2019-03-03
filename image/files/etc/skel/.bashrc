@@ -3,26 +3,32 @@
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# If not running interactively, don't do anything
+# If not running interactively, don't do anything --------------------
 case $- in
     *i*) ;;
       *) return;;
 esac
 
+# Environment --------------------------------------------------------
 export USER=${USER-$(whoami)}
 export HOSTNAME=${HOSTNAME-$(hostname)}
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
-
+# History ------------------------------------------------------------
 shopt -s histappend
 export HISTCONTROL='ignoreboth,ignoredups'
 export HISTSIZE=1000
 export HISTFILESIZE=2000
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# Misc ---------------------------------------------------------------
 shopt -s checkwinsize
 shopt -s dotglob # files beginning with . returned in path-name expansion.
+# In case you miss the command you are searching giving a Ctrl + r,
+# you can reverse the search direction by hitting CTRL + s
+# However,this is normally mapped to XOFF (interrupt data flow).
+# Since that's not too useful any more
+# because we're not using slow serial terminals, turn off that mapping with:
+stty -ixon
 
-# enable color support
+# Colors support -----------------------------------------------------
 test -x /usr/bin/dircolors && {
     eval "$(dircolors -b)"
 }
@@ -35,3 +41,17 @@ alias ls='ls --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 }
+
+# Editor ------------------------------------------------------------
+test -z "$EDITOR" && type -f vim &> /dev/null && {
+    export EDITOR=vim
+}
+
+# Completions --------------------------------------------------------
+(f='/etc/profile.d/bash_completion.sh'; test -f "$f" && test -r "$f") && {
+    . '/etc/profile.d/bash_completion.sh'
+}
+
+# Local Variables:
+# mode: Shell-script
+# End:
