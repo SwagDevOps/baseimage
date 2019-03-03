@@ -38,7 +38,7 @@ bundle exec rake restart
 bundle exec rspec
 ```
 
-Tests are executed over ``SSH``, and rely on minmal dependencies.
+Tests are executed over ``SSH``, and rely on minimal dependencies.
 
 ## See also
 
