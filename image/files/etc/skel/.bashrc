@@ -9,6 +9,11 @@ case $- in
       *) return;;
 esac
 
+# Profile ------------------------------------------------------------
+(f=/etc/profile; test -f "${f}" && test -r "${f}") && {
+    . /etc/profile
+}
+
 # Environment --------------------------------------------------------
 export USER=${USER-$(whoami)}
 export HOSTNAME=${HOSTNAME-$(hostname)}
@@ -42,14 +47,9 @@ alias ls='ls --color=auto'
     alias egrep='egrep --color=auto'
 }
 
-# Editor ------------------------------------------------------------
+# Editor -------------------------------------------------------------
 test -z "$EDITOR" && type -f vim &> /dev/null && {
     export EDITOR=vim
-}
-
-# Completions --------------------------------------------------------
-(f='/etc/profile.d/bash_completion.sh'; test -f "$f" && test -r "$f") && {
-    . '/etc/profile.d/bash_completion.sh'
 }
 
 # Local Variables:
