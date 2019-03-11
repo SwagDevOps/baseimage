@@ -14,7 +14,7 @@ LABEL maintainer=#{quote('%s <%s>' % [@maintainer, @email])} \
       org.label-schema.url=#{quote(@homepage)}
 
 ENV INITRD=no \
-    TZ=Europe/Paris \
+    TZ=UTC \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
