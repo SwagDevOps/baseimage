@@ -9,6 +9,6 @@ describe 'login shell environment', :environment do
     its(:stdout) { should match(/^PATH=#{path}$/) }
     its(:stdout) { should match(/^SVDIR=/) }
     its(:stdout) { should match(/^SVWAIT=/) }
-    its(:stdout) { should match(%r{^TZ=Europe/Paris$}) }
+    its(:stdout) { should match(%r{^TZ=UTC$}) }
   end
 end
