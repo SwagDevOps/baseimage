@@ -6,7 +6,7 @@ require 'kamaze/docker_image'
 autoload :YAML, 'yaml'
 
 Kamaze::DockerImage.new do |config|
-  config.name    = 'kamaze/alpine_server'
+  config.name    = ENV.fetch('image_name')
   config.version = Kamaze::Version.new('image/version.yml').freeze
   config.path    = 'image'
   config.verbose = false

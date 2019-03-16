@@ -4,6 +4,8 @@
 require 'rubygems'
 require 'bundler/setup'
 
+ENV['image_name'] ||= 'swagdevops/alpine_server'
+
 if Gem::Specification.find_all_by_name('sys-proc').any?
   require 'sys/proc'
 
