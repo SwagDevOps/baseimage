@@ -1,37 +1,31 @@
-#!/usr/bin/env sh
+#!/usr/bin/env ruby
+# coding: utf-8
+# frozen_string_literal: true
 
-main() {
-    set -eu
-    LOGDIR=/var/log
+require 'pathname'
+require 'fileutils'
+# rubocop:disable Style/MixinUsage
+include(FileUtils::Verbose)
+# rubocop:enable Style/MixinUsage
 
-    lastlog
-    secure
-}
+Pathname.new('/var/log').tap do |logdir|
+  logdir.join('lastlog').tap do |lastlog|
+    touch(lastlog)
+    chown('root', 'utmp', lastlog)
+  end
 
-# Create lastlog file
-#
-# lastlog - reports the most recent login of all users or of a given user
-# @see https://linux.die.net/man/8/lastlog
-lastlog() {
-    (set -eu
-     f="${LOGDIR}/lastlog"
+  logdir.join('secure').tap do |seclog|
+    Pathname.new('/etc/syslog.conf').tap do |config|
+      if config.file? and config.readable?
+        if /\s+#{seclog}\s*$/ =~ config.read
+          touch(seclog)
+          chmod(0o640, seclog)
+        end
+      end
+    end
+  end
 
-     touch "$f"
-     chown root:utmp -v "$f"
-    )
-}
-
-# Create secure file (depending on syslog.conf)
-#
-# The authpriv file has restricted access (640)
-secure() {
-    (set -eu
-     f="${LOGDIR}/secure"
-
-     cat /etc/syslog.conf 2>/dev/null | grep -qE "\s+${f}\s*$" || exit 0
-     touch "$f"
-     chmod 640 -v "$f"
-    )
-}
-
-main
+  logdir.join('ylem').tap do |logfile|
+    chmod(0o640, logfile) if logfile.file?
+  end
+end
