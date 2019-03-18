@@ -40,6 +40,18 @@ bundle exec rspec
 
 Tests are executed over ``SSH``, and rely on minimal dependencies.
 
+## Doker Hub
+
+Also available on Docker Hub: [swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
+
+```sh
+docker pull swagdevops/alpine_server:3.8.1
+```
+
+```
+FROM swagdevops/alpine_server:3.8.1
+```
+
 ## See also
 
 * [A minimal Ubuntu base image][phusion/baseimage-docker]
@@ -54,3 +66,4 @@ Tests are executed over ``SSH``, and rely on minimal dependencies.
 [phusion/baseimage-docker]: https://github.com/phusion/baseimage-docker
 [qenv/alpine-base]: https://github.com/qenv/alpine-base
 [linuxfr:petit-etat-de-l-art]: https://linuxfr.org/news/petit-etat-de-l-art-des-systemes-d-initialisation-1
+[docker_hub.com:swagdevops/alpine_server]: https://hub.docker.com/r/swagdevops/alpine_server
