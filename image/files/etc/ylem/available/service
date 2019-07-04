@@ -5,13 +5,16 @@ require 'sv/utils/cli'
 require 'yaml'
 require 'pathname'
 require 'fileutils'
+# rubocop:disable Style/MixinUsage
+include(FileUtils)
+# rubocop:enable Style/MixinUsage
 
 Pathname.new('/etc/service.yml').tap do |config|
   exit 0 unless config.file? and config.readable?
 
   ENV.fetch('SVDIR').tap do |svdir|
-    Dir.glob("#{svdir}/*").each { |fp| FileUtils.rm_rf(svdir) }
-    FileUtils.mkdir_p(svdir, mode: 0o755)
+    rm_rf(svdir)
+    mkdir_p(svdir, mode: 0o755)
   end
 
   YAML.safe_load(config.read).each do |name, auto|
