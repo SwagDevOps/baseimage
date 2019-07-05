@@ -1,4 +1,4 @@
 ---
 logger.level: DEBUG
 scripts.path: enabled
-logger.file: /var/log/ylem
+logger.file: /proc/1/fd/1
