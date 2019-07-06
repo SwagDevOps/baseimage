@@ -10,7 +10,7 @@
   [:folder, 'sv-utils'] => [
     'https://github.com/SwagDevOps/sv-utils', {
       branch: 'master',
-      ref: '0cd48c0',
+      ref: 'e438944',
     }
   ],
   [:folder, 'ylem'] => [
