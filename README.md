@@ -1,6 +1,6 @@
 # Alpine Server Image
 
-Image based on ``alpine:3.8`` ([release notes][release:2018-06-26]).
+Image based on ``alpine:3.9`` ([release notes][release:2018-06-26]).
 
 This image consumes less than 6MB RAM (on startup).
 
@@ -45,11 +45,11 @@ Tests are executed over ``SSH``, and rely on minimal dependencies.
 Also available on Docker Hub: [swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
 
 ```sh
-docker pull swagdevops/alpine_server:3.8.1
+docker pull swagdevops/alpine_server:3.9.0
 ```
 
 ```
-FROM swagdevops/alpine_server:3.8.1
+FROM swagdevops/alpine_server:3.9.0
 ```
 
 ## See also
