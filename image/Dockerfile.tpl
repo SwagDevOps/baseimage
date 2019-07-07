@@ -38,7 +38,7 @@ COPY files /
 RUN rsync -rua /etc/skel/.*[:alnum:]* /root/
 
 ENTRYPOINT ["/boot/run"]
-CMD ["/sbin/runsvdir-start"]
+CMD ["runsvdir-start"]
 
 # Local Variables:
 # mode: Dockerfile
