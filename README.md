@@ -40,7 +40,7 @@ bundle exec rspec
 
 Tests are executed over ``SSH``, and rely on minimal dependencies.
 
-## Doker Hub
+## Docker Hub
 
 Also available on Docker Hub: [swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
 
