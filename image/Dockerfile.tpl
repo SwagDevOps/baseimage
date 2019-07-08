@@ -29,11 +29,11 @@ RUN apk add --no-cache \
         vim less coreutils sed procps \
         dropbear dropbear-convert \
         ruby ruby-bundler \
-        ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json \
-        openssh-client git
+        ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json
 
 COPY build /build
-RUN /build/run
+RUN /build/run && \
+    apk del --no-cache ruby-bundler
 COPY files /
 RUN rsync -rua /etc/skel/.*[:alnum:]* /root/
 
