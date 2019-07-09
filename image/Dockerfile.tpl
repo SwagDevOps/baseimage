@@ -28,12 +28,10 @@ RUN apk add --no-cache \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
         dropbear dropbear-convert \
-        ruby ruby-bundler \
-        ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json
+        ruby ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json
 
 COPY build /build
-RUN /build/run && \
-    apk del --no-cache ruby-bundler
+RUN /build/run
 COPY files /
 RUN rsync -rua /etc/skel/.*[:alnum:]* /root/
 
