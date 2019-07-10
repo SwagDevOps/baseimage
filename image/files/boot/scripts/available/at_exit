@@ -7,8 +7,6 @@ require 'fileutils'
 include(FileUtils::Verbose)
 # rubocop:enable Style/MixinUsage
 
-[
-  '/boot/scripts',
-].compact.sort.each do |fp|
-  rm_rf(fp)
-end
+Dir['/boot/{.[^\.]*,*}']
+  .reject { |fp| Pathname.new(fp).mountpoint? }
+  .sort.each { |fp| rm_rf(fp) }
