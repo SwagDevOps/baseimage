@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# frozen_string_literal: true
+
+require 'etc'
+require 'pathname'
+require 'fileutils'
+# rubocop:disable Style/MixinUsage
+include(FileUtils::Verbose)
+# rubocop:enable Style/MixinUsage
+
+Pathname.new('/boot/ssh/authorized_keys').tap do |dir|
+  exit(0) unless dir.directory?
+  # @formatter:off
+  Dir["#{dir}/{.[^\.]*,*}"]
+    .sort
+    .map { |f| Pathname.new(f) }.keep_if(&:file?).map do |file|
+    [file, Etc.getpwnam(file.basename.to_s)]
+  rescue ArgumentError => e
+    warn(e.message)
+  end.compact.to_h.each do |file, user|
+    Pathname.new("#{user.dir}/.ssh/authorized_keys").tap do |target|
+      mkdir_p(target.dirname)
+      chmod(0o700, target.dirname)
+      cp(file, target)
+      chmod(0o600, target)
+      chown(user.uid, user.gid, target) if user
+    end
+  end
+end

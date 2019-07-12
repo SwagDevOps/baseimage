@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# frozen_string_literal: true
+
+require 'pathname'
+require 'fileutils'
+# rubocop:disable Style/MixinUsage
+include(FileUtils::Verbose)
+# rubocop:enable Style/MixinUsage
+
+# @formatter:off
+HOST_FILES = {
+    'pem': Pathname.new('/boot/ssh/host_rsa.pem'),
+    'rsa': Pathname.new('/boot/ssh/host_rsa'),
+}
+# @formatter:on
+
+sh = lambda do |*args|
+  system(*args) || lambda do
+    raise args.inspect
+  end.call
+end
+
+# Convert PEM file
+pem = lambda do
+  Pathname.new('/boot/ssh/host_rsa.pem').tap do |fp|
+    if fp.file?
+      sh.call('dropbearconvert',
+              'openssh',
+              'dropbear',
+              fp.to_s, fp.dirname.join('host_rsa').to_s)
+    end
+  end
+end
+
+setup = lambda do |confdir|
+  confdir = Pathname.new(confdir)
+  pem.call
+  Pathname.new('/boot/ssh/host_rsa').tap do |rsa|
+    sh.call('dropbearkey', '-f', rsa.to_s, '-t', 'rsa') unless rsa.file?
+    mkdir_p(confdir.to_s)
+    cp(rsa.to_s, confdir.to_s) unless confdir.join('host_rsa').file?
+  end
+end
+
+setup.call(ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear'))

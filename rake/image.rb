@@ -22,7 +22,8 @@ Kamaze::DockerImage.new do |config|
   config.commands.merge!(
     stop: ['stop', '-t', 20, '%<run_as>s'],
     start: ['run', '-h', config.run_as,
-            '-v', "#{Dir.pwd}/ssh/:/etc/dropbear",
+            # '-v', "#{Dir.pwd}/ssh/:/etc/dropbear",
+            '-v', "#{Dir.pwd}/ssh/:/boot/ssh",
             '-d', '--name', '%<run_as>s', '%<tag>s']
   )
 end.tap do |image|
