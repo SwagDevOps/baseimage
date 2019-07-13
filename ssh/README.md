@@ -3,8 +3,8 @@
 Sample config directory structure:
 
 ```
-/etc/dropbear/
-├── allow
+/boot/ssh/
+├── authorized_keys
 │   └── root
 ├── host_rsa
 └── host_rsa.pem
@@ -12,7 +12,7 @@ Sample config directory structure:
 
 ``host_rsa`` file SHOULD be mounted, or it will be generated
 it can be converted from a PEM file (``host_rsa.pem``).
-Files found in ``/etc/dropbear/allow`` will be copied,
+Files found in ``/boot/ssh/authorized_keys`` will be copied,
 to the corresponding users ``.ssh`` directories.
 
 ## Generate ``host_rsa.pem`` file
