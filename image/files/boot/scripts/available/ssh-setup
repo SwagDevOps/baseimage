@@ -2,12 +2,16 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-autoload(:Pathname, 'pathname')
-autoload(:FileUtils, 'fileutils')
-include(FileUtils::Verbose)
-
-# Install server key.
+# Generate (as required) and install hostkey.
+#
+# When a (openssh) PEM file is present, it will be used to generate
+# a RSA (dropbear) key. Instead, if a RSA file is present, it will be used.
+# Hostkey already present will be overwritten by the result of this script.
 class SetupSSH
+  autoload(:Pathname, 'pathname')
+  autoload(:FileUtils, 'fileutils')
+  include(FileUtils::Verbose)
+
   # @formatter:off
   BOOT_FILES = {
     'pem': 'host_rsa.pem',
@@ -15,8 +19,8 @@ class SetupSSH
   }.map { |key, name| [key, Pathname.new('/boot/ssh').join(name)] }.to_h.freeze
   # @formatter:on
 
-  def initialize(confdir = ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear'))
-    @confdir = Pathname.new(confdir)
+  def initialize(confdir = ENV['DROPBEAR_CONFDIR'])
+    @confdir = Pathname.new(confdir || '/etc/dropbear')
   end
 
   def call
