@@ -2,45 +2,70 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'pathname'
-require 'fileutils'
-# rubocop:disable Style/MixinUsage
+autoload(:Pathname, 'pathname')
+autoload(:FileUtils, 'fileutils')
 include(FileUtils::Verbose)
-# rubocop:enable Style/MixinUsage
 
-# @formatter:off
-HOST_FILES = {
-    'pem': Pathname.new('/boot/ssh/host_rsa.pem'),
-    'rsa': Pathname.new('/boot/ssh/host_rsa'),
-}
-# @formatter:on
+# Install server key.
+class SetupSSH
+  # @formatter:off
+  BOOT_FILES = {
+    'pem': 'host_rsa.pem',
+    'rsa': 'host_rsa',
+  }.map { |key, name| [key, Pathname.new('/boot/ssh').join(name)] }.to_h.freeze
+  # @formatter:on
 
-sh = lambda do |*args|
-  system(*args) || lambda do
-    raise args.inspect
-  end.call
-end
+  def initialize(confdir = ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear'))
+    @confdir = Pathname.new(confdir)
+  end
 
-# Convert PEM file
-pem = lambda do
-  Pathname.new('/boot/ssh/host_rsa.pem').tap do |fp|
-    if fp.file?
-      sh.call('dropbearconvert',
-              'openssh',
-              'dropbear',
-              fp.to_s, fp.dirname.join('host_rsa').to_s)
+  def call
+    confdir.join('host_rsa').tap do |host_rsa|
+      mkdir_p(confdir) unless confdir.exist?
+      cp(gen_key.to_s, host_rsa.to_s)
+      chmod(0o600, host_rsa.to_s)
+    end
+  end
+
+  protected
+
+  attr_reader :confdir
+
+  # Execute given args as a command line.
+  #
+  # @raise [RuntimeError]
+  def sh(*args)
+    system(*args) || lambda do
+      raise args.inspect
+    end.call
+  end
+
+  # Convert PEM file
+  #
+  # @return [Array<Pathname>]
+  def pem_convert
+    [BOOT_FILES.fetch(:pem), BOOT_FILES.fetch(:rsa)].tap do |files|
+      if files[0].file?
+        sh('dropbearconvert',
+           'openssh',
+           'dropbear',
+           files[0].to_s, files[1].to_s)
+      end
+    end
+  end
+
+  # Generate server key.
+  #
+  # @return [Pathname]
+  def gen_key
+    BOOT_FILES.fetch(:rsa).tap do |rsa|
+      pem_convert
+      unless rsa.file?
+        sh('dropbearkey', '-f', rsa.to_s, '-t', 'rsa')
+      end
     end
   end
 end
 
-setup = lambda do |confdir|
-  confdir = Pathname.new(confdir)
-  pem.call
-  Pathname.new('/boot/ssh/host_rsa').tap do |rsa|
-    sh.call('dropbearkey', '-f', rsa.to_s, '-t', 'rsa') unless rsa.file?
-    mkdir_p(confdir.to_s)
-    cp(rsa.to_s, confdir.to_s) unless confdir.join('host_rsa').file?
-  end
-end
-
-setup.call(ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear'))
+# Execute setup
+SetupSSH.new.call if __FILE__ == $PROGRAM_NAME
