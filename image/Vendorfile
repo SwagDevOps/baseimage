@@ -16,7 +16,7 @@
   [:folder, 'ylem'] => [
     'https://github.com/SwagDevOps/ylem', {
       branch: 'master',
-      ref: '339c60c',
+      ref: 'e784a68',
     }
   ],
 }.each { |k, v| public_send(k.fetch(0), *([vendor.join(k.fetch(1))] + v)) }
