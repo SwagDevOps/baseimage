@@ -16,9 +16,9 @@ docker ps | awk '{print $1}' | grep -v CONTAINER | while read line; do docker ps
 
 This image brings a 3 parts init system, composed of:
 
-1. [``dumb-init``][dumb-init] minimal init system for Linux containers
-2. [``ylem``][ylem] startup scripts execution
-2. [``runit``][runit] services management
+1. [``ylem``][ylem] startup scripts execution
+2. [``dumb-init``][dumb-init] minimal init system for Linux containers
+3. [``runit``][runit] services management
 
 ## Try
 
