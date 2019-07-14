@@ -26,7 +26,9 @@ class SetupSSH
   def call
     confdir.join('host_rsa').tap do |host_rsa|
       mkdir_p(confdir) unless confdir.exist?
-      cp(gen_key.to_s, host_rsa.to_s)
+      (BOOT_FILES[:pem].file? ? :mv : :cp).tap do |m|
+        self.__send__(m, gen_key.to_s, host_rsa.to_s)
+      end
       chmod(0o600, host_rsa.to_s)
     end
   end
