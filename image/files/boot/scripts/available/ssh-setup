@@ -29,7 +29,7 @@ class SetupSSH
       (BOOT_FILES[:pem].file? ? :mv : :cp).tap do |m|
         self.__send__(m, gen_key.to_s, host_rsa.to_s)
       end
-      chmod(0o600, host_rsa.to_s)
+      chmod(0o400, host_rsa.to_s)
     end
   end
 
