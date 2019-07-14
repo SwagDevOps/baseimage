@@ -32,10 +32,9 @@ bundle exec rake build start exec
 ## Run tests
 
 ```
-mkdir -p ssh/allow
-cp ~/.ssh/id_rsa.pub ssh/allow/root
-bundle exec rake restart
-bundle exec rspec
+mkdir -p ssh/authorized_keys
+cp ~/.ssh/id_rsa.pub ssh/authorized_keys/root
+bundle exec rake restart test
 ```
 
 Tests are executed over ``SSH``, and rely on minimal dependencies.
