@@ -23,12 +23,13 @@ class SetupSSH
     @confdir = Pathname.new(confdir || '/etc/dropbear')
   end
 
+  # Generate host file and intall it.
   def call
     confdir.join('host_rsa').tap do |host_rsa|
-      return host_rsa if host_rsa.file?
-
       mkdir_p(confdir) unless confdir.exist?
       (BOOT_FILES[:pem].file? ? :mv : :cp).tap do |m|
+        # move host_rsa when PEM file is present
+        # because host_rsa has been generetaed from PEM file.
         self.__send__(m, gen_key.to_s, host_rsa.to_s)
       end
       chmod(0o400, host_rsa.to_s)
