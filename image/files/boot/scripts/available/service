@@ -1,27 +1,65 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'sv/utils/cli'
-require 'yaml'
-require 'pathname'
-require 'fileutils'
-# rubocop:disable Style/MixinUsage
-include(FileUtils)
-# rubocop:enable Style/MixinUsage
+# Install services.
+#
+# Servive startup scripts are located in ``/etc/service``
+# according to ``svctl`` config file: ``/etc/sv-utils.yml``.
+# They are copied to ``SVDIR`` environment variable path.
+class SetupService
+  require 'sv/utils/cli'
+  autoload(:YAML, 'yaml')
+  autoload(:Pathname, 'pathname')
+  autoload(:FileUtils, 'fileutils')
+  include(FileUtils::Verbose)
 
-Pathname.new('/etc/service.yml').tap do |config|
-  exit 0 unless config.file? and config.readable?
+  def initialize
+    @config_file = Pathname.new('/etc/service.yml')
+    @svdir = Pathname.new(ENV.fetch('SVDIR'))
+  end
 
-  ENV.fetch('SVDIR').tap do |svdir|
+  def call
+    return unless config
+
     rm_rf(svdir)
     mkdir_p(svdir, mode: 0o755)
+    load_services
   end
 
-  YAML.safe_load(config.read).each do |name, auto|
-    ['enable', name.to_s, '--%<no>sauto-start' % {
-      no: auto ? '' : 'no-'
-    }].tap do |args|
-      Sv::Utils::CLI.call(:control, args)
+  # @return [Hash|nil]
+  def config
+    return nil unless config_file.file? and config_file.readable?
+
+    YAML.safe_load(config_file.read)
+  end
+
+  # Get commands as args passed to svctl
+  #
+  # @return [Array]
+  def commands
+    config.to_h.map do |name, auto|
+      # @formatter:off
+      ['enable',
+       name.to_s, '--%<no>sauto-start' % {
+              no: auto ? '' : 'no-'
+      }]
+      # @formatter:on
     end
   end
+
+  def load_services
+    # require 'sv/utils/cli'
+    commands.each { |args| Sv::Utils::CLI.call(:control, args) }
+  end
+
+  protected
+
+  # @return [Pathname]
+  attr_reader :config_file
+
+  # @return [Pathname]
+  attr_reader :svdir
 end
+
+# Execute setup
+SetupService.new.call if __FILE__ == $PROGRAM_NAME
