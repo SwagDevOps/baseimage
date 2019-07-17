@@ -39,7 +39,7 @@ class AuthKeysSeup
       mkdir_p(target.dirname)
       chmod(0o700, target.dirname)
       cp(file, target)
-      chmod(0o600, target)
+      chmod(0o400, target)
       chown(user.uid, user.gid, target) if user
     end
   end
