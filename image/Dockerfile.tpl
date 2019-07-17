@@ -34,7 +34,8 @@ RUN apk add --no-cache \
 COPY build /build
 RUN /build/run
 COPY files /
-RUN rsync -rua /etc/skel/.*[:alnum:]* /root/
+RUN find /etc/skel/ -type f -exec chmod 400 {} \; && \
+    rsync -rua /etc/skel/.*[:alnum:]* /root/
 
 ENTRYPOINT ["/boot/run"]
 CMD ["runsvdir-start"]
