@@ -32,10 +32,15 @@ RUN apk add --no-cache \
         rm -fv /etc/crontabs/root
 
 COPY build /build
-RUN /build/run
+RUN chmod -v 755 /build/run && \
+    find /build/scripts/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
+    /build/run
+
 COPY files /
-RUN find /etc/skel/ -type f -exec chmod 400 {} \; && \
-    rsync -rua /etc/skel/.*[:alnum:]* /root/
+RUN chmod -v 755 /boot/run /sbin/runsvdir-start && \
+    find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
+    rsync -rua /etc/skel/.*[:alnum:]* /root/ && \
+    find /root/ -type f -name ".*" -exec chmod -v 400 {} \;
 
 ENTRYPOINT ["/boot/run"]
 CMD ["runsvdir-start"]
