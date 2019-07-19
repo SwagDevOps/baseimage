@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# This script SHOULD be replaced by ylem "hooks" when availbale.
+
 require 'pathname'
 require 'fileutils'
 # rubocop:disable Style/MixinUsage
