@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'shellwords'
-require 'pathname'
-
 # Provides environment export.
 class EnvExp < Hash
+  autoload(:Shellwords, 'shellwords')
+  autoload(:Pathname, 'pathname')
+
   # @param [ENV|Hash] env
   def initialize(env = ENV)
     env.clone.to_h.sort.to_h.each do |k, v|
@@ -58,13 +58,16 @@ end
 #
 # Shares environment, retrieved from Docker, to be seen from shells (ssh).
 if __FILE__ == $PROGRAM_NAME
+  require 'pathname'
   require 'fileutils'
   # rubocop:disable Style/MixinUsage
   include(FileUtils::Verbose)
   # rubocop:enable Style/MixinUsage
 
+  at_exit { GC.start }
+
   EnvExp.new.tap do |env|
-    env.delete_if do |k, v|
+    env.delete_if do |k, _v|
       %w[PWD HOME LOGNAME USER USERNAME HOSTNAME].include?(k)
     end
   end.freeze.tap do |env|

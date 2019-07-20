@@ -41,8 +41,8 @@ class SetupService
       # @formatter:off
       ['enable',
        name.to_s, '--%<no>sauto-start' % {
-              no: auto ? '' : 'no-'
-      }]
+         no: auto ? '' : 'no-'
+       }]
       # @formatter:on
     end
   end
@@ -62,4 +62,8 @@ class SetupService
 end
 
 # Execute setup
-SetupService.new.call if __FILE__ == $PROGRAM_NAME
+if __FILE__ == $PROGRAM_NAME
+  at_exit { GC.start }
+
+  SetupService.new.call
+end

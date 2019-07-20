@@ -71,4 +71,8 @@ class AuthKeysSeup
 end
 
 # Execute setup
-AuthKeysSeup.new.call if __FILE__ == $PROGRAM_NAME
+if __FILE__ == $PROGRAM_NAME
+  at_exit { GC.start }
+
+  AuthKeysSeup.new.call
+end

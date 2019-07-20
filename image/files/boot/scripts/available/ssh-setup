@@ -77,4 +77,8 @@ class SetupSSH
 end
 
 # Execute setup
-SetupSSH.new.call if __FILE__ == $PROGRAM_NAME
+if __FILE__ == $PROGRAM_NAME
+  at_exit { GC.start }
+
+  SetupSSH.new.call
+end

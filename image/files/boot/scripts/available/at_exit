@@ -9,6 +9,8 @@ require 'fileutils'
 include(FileUtils::Verbose)
 # rubocop:enable Style/MixinUsage
 
+at_exit { GC.start }
+
 Dir['/boot/{.[^\.]*,*}']
   .reject { |fp| Pathname.new(fp).mountpoint? }
   .sort.each { |fp| rm_rf(fp) }
