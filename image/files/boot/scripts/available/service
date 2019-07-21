@@ -6,31 +6,87 @@
 # Servive startup scripts are located in ``/etc/service``
 # according to ``svctl`` config file: ``/etc/sv-utils.yml``.
 # They are copied to ``SVDIR`` environment variable path.
+#
+# Each service MUST have a ``manifest.yml`` file.
+#
+# Sample:
+#
+# ```yaml
+# ---
+# enabled: true
+# auto_start: true
+# ```
 class SetupService
-  require 'sv/utils/cli'
   autoload(:YAML, 'yaml')
+  autoload(:ERB, 'erb')
   autoload(:Pathname, 'pathname')
   autoload(:FileUtils, 'fileutils')
   include(FileUtils::Verbose)
 
-  def initialize
-    @config_file = Pathname.new('/etc/service.yml')
+  # @param [String|nil] path for service(s) location
+  def initialize(path = nil)
+    @path = Pathname.new(path || '/etc/service')
     @svdir = Pathname.new(ENV.fetch('SVDIR'))
   end
 
   def call
-    return unless config
-
     rm_rf(svdir)
     mkdir_p(svdir, mode: 0o755)
     load_services
   end
 
-  # @return [Hash|nil]
+  # Get a simple hash as service name => auto_start (boolean).
+  #
+  # @return [Hash{Symbol => Boolean}]
   def config
-    return nil unless config_file.file? and config_file.readable?
+    # @formatter:off
+    manifests
+      .keep_if { |_fp, config| config['enabled'] }
+      .map { |fp, config| [fp.dirname.basename.to_s.to_sym, config] }
+      .map { |name, config| [name, config['auto_start']] }
+      .to_h
+    # @formatter:on
+  end
 
-    YAML.safe_load(config_file.read)
+  # List manifest files and get config indexed by filepaths.
+  #
+  # @return [Hash{Pathname => Hash}]
+  def manifests
+    # @formatter:off
+    Dir.glob(path.join('*/manifest.yml'))
+       .sort
+       .map { |fp| Pathname.new(fp) }
+       .keep_if { |fp| fp.file? and fp.readable? }
+       .map { |fp| [fp, YAML.safe_load(ERB.new(fp.read).result)] }
+       .map { |fp, config| [fp, defaults_apply(config)] }
+       .to_h
+    # @formatter:on
+  end
+
+  protected
+
+  # Path to (original) services.
+  #
+  # @return [Pathname]
+  attr_reader :path
+
+  # @return [Pathname]
+  attr_reader :svdir
+
+  # @param [Hash] config
+  #
+  # @return [Hash]
+  def defaults_apply(config)
+    # @formatter:off
+    config.tap do
+      {
+        'enabled' => false,
+        'auto_start' => false,
+      }.tap do |defaults|
+        defaults.each { |k, v| config[k] = v unless config.key?(k) }
+      end
+    end
+    # @formatter:on
   end
 
   # Get commands as args passed to svctl
@@ -48,22 +104,15 @@ class SetupService
   end
 
   def load_services
-    # require 'sv/utils/cli'
+    require 'sv/utils/cli'
+
     commands.each { |args| Sv::Utils::CLI.call(:control, args) }
   end
-
-  protected
-
-  # @return [Pathname]
-  attr_reader :config_file
-
-  # @return [Pathname]
-  attr_reader :svdir
 end
 
 # Execute setup
 if __FILE__ == $PROGRAM_NAME
   at_exit { GC.start }
 
-  SetupService.new.call
+  SetupService.new(ARGV[0]).call
 end
