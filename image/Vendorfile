@@ -15,7 +15,7 @@
   ],
   [:folder, 'ylem'] => [
     'https://github.com/SwagDevOps/ylem', {
-      :tag => 'v1.0.2'
+      :tag => 'v1.0.3'
     }
   ],
 }.each { |k, v| public_send(k.fetch(0), *([vendor.join(k.fetch(1))] + v)) }
