@@ -1,6 +1,6 @@
 ---
 ylem:
-  version: '= 1.0.4'
+  version: '= 1.0.5'
   local: true
   bindir: '/sbin'
 sv-utils:
