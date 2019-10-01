@@ -23,8 +23,17 @@ class SetupSSH
     @confdir = Pathname.new(confdir || '/etc/dropbear')
   end
 
+  # Directories used during boot sequence.
+  #
+  # @return [Array<Pathname>]
+  def boot_directories
+    BOOT_FILES.to_a.map { |_k, file| file.dirname }.uniq
+  end
+
   # Generate host file and intall it.
   def call
+    boot_directories.each { |fp| mkdir_p(fp.to_s) unless fp.exist? }
+
     confdir.join('host_rsa').tap do |host_rsa|
       mkdir_p(confdir) unless confdir.exist?
       (BOOT_FILES[:pem].file? ? :mv : :cp).tap do |m|
