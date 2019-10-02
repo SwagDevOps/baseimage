@@ -25,7 +25,7 @@ class SetupService
 
   # @param [String|nil] path for service(s) location
   def initialize(path = nil)
-    @path = Pathname.new(path || '/etc/service')
+    @path = Pathname.new(path || fetch_path)
     @svdir = Pathname.new(ENV.fetch('SVDIR'))
   end
 
@@ -107,6 +107,17 @@ class SetupService
     require 'sv/utils/cli'
 
     commands.each { |args| Sv::Utils::CLI.call(:control, args) }
+  end
+
+  # Extract path from configuration.
+  #
+  # @return [String]
+  def fetch_path
+    require 'sv/utils/config'
+
+    Sv::Utils::Config.new.tap do |config|
+      return config['control']['paths'].fetch(0)
+    end
   end
 end
 
