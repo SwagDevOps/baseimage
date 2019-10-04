@@ -32,7 +32,9 @@ class SetupService
   def call
     rm_rf(svdir)
     mkdir_p(svdir, mode: 0o755)
-    load_services
+    [:dump_services, :load_services].map do |m|
+      Thread.new { __send__(m) }
+    end.map(&:join)
   end
 
   # Get a simple hash as service name => auto_start (boolean).
@@ -103,10 +105,19 @@ class SetupService
     end
   end
 
+  def dump_services
+    Pathname.new(path).join('config.yml').tap do |fp|
+      YAML.dump(config.transform_keys(&:to_s)).tap { |c| fp.write(c) }
+      chmod(0o444, fp.to_s)
+    end
+  end
+
   def load_services
     require 'sv/utils/cli'
 
-    commands.each { |args| Sv::Utils::CLI.call(:control, args) }
+    commands.map do |args|
+      Thread.new { Sv::Utils::CLI.call(:control, args) }
+    end.map(&:join)
   end
 
   # Extract path from configuration.
