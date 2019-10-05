@@ -3,14 +3,16 @@
 
 # This script SHOULD be replaced by ylem "hooks" when availbale.
 
-require 'pathname'
-require 'fileutils'
+autoload(:Pathname, 'pathname')
+autoload(:FileUtils, 'fileutils')
 # rubocop:disable Style/MixinUsage
 include(FileUtils::Verbose)
 # rubocop:enable Style/MixinUsage
 
 at_exit { GC.start }
 
-Dir['/boot/{.[^\.]*,*}']
-  .reject { |fp| Pathname.new(fp).mountpoint? }
-  .sort.each { |fp| rm_rf(fp) }
+Dir['/boot/{.[^\.]*,*}'].sort.tap do |paths|
+  paths.map do |fp|
+    Thread.new { rm_rf(fp) unless Pathname.new(fp).mountpoint? }
+  end.map(&:join)
+end

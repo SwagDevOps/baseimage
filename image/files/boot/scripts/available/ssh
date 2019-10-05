@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# noinspection RubyResolve
+require '/boot/lib/ruby/boot'
+
+# Execute setup
+if __FILE__ == $PROGRAM_NAME
+  at_exit { GC.start }
+
+  Boot::Services::Setup.new.config[:ssh].tap do |flag|
+    if flag
+      [Boot::SSH::Auth, Boot::SSH::DropbearSetup].map do |klass|
+        Thread.new { klass.new.call }
+      end.map(&:join)
+    end
+  end
+end
