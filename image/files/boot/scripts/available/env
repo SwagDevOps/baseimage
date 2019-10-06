@@ -25,16 +25,18 @@ if __FILE__ == $PROGRAM_NAME
       %w[PWD HOME LOGNAME USER USERNAME HOSTNAME].include?(k)
     end
   end.freeze.tap do |env|
-    # @formatter:off
-    {
-      '/etc/profile.d/environment.sh' => ->(fp) { fp.write(env.export) },
-      '/etc/environment' => ->(fp) { fp.write(env.prepend(fp)) }
-    }.sort.map do |filepath, func|
-      Thread.new do
-        func.call(Pathname.new(filepath))
-        chmod(0o444, filepath)
+    Boot::ThreadPool.new(wait: true) do |pool|
+      # @formatter:off
+      {
+        '/etc/profile.d/environment.sh' => ->(fp) { fp.write(env.export) },
+        '/etc/environment' => ->(fp) { fp.write(env.prepend(fp)) }
+      }.sort.map do |filepath, func|
+        pool.schedule do
+          func.call(Pathname.new(filepath))
+          chmod(0o444, filepath)
+        end
       end
-    end.map(&:join)
-    # @formatter:on
+      # @formatter:on
+    end
   end
 end
