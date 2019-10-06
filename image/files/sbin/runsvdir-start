@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'shellwords'
+autoload(:Shellwords, 'shellwords')
 
 ENV['SVDIR'].tap do |svdir|
   if svdir.to_s.empty?
