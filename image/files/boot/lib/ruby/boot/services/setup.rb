@@ -33,9 +33,12 @@ class Boot::Services::Setup
   def call
     rm_rf(svdir)
     mkdir_p(svdir, mode: 0o755)
-    [:dump_services, :load_services].map do |m|
-      Thread.new { __send__(m) }
-    end.map(&:join)
+
+    Boot::ThreadPool.new(wait: true) do |pool|
+      [:dump_services, :load_services].map do |m|
+        pool.schedule { __send__(m) }
+      end
+    end
   end
 
   # Get a simple hash as service name => auto_start (boolean).
@@ -116,9 +119,11 @@ class Boot::Services::Setup
   def load_services
     require 'sv/utils/cli'
 
-    commands.map do |args|
-      Thread.new { Sv::Utils::CLI.call(:control, args) }
-    end.map(&:join)
+    Boot::ThreadPool.new(wait: true) do |pool|
+      commands.map do |args|
+        pool.schedule { Sv::Utils::CLI.call(:control, args) }
+      end
+    end
   end
 
   # Extract path from configuration.
