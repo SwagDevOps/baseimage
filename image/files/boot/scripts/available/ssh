@@ -10,9 +10,11 @@ if __FILE__ == $PROGRAM_NAME
 
   Boot::Services::Setup.new.config[:ssh].tap do |flag|
     if flag
-      [Boot::SSH::Auth, Boot::SSH::DropbearSetup].map do |klass|
-        Thread.new { klass.new.call }
-      end.map(&:join)
+      Boot::ThreadPool.new(wait: true) do |pool|
+        [Boot::SSH::Auth, Boot::SSH::DropbearSetup].map do |klass|
+          pool.schedule { klass.new.call }
+        end
+      end
     end
   end
 end
