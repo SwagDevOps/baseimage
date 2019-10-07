@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-autoload(:Shellwords, 'shellwords')
-
 ENV['SVDIR'].tap do |svdir|
   if svdir.to_s.empty?
     warn('SVDIR must be set')
     exit(Errno::ECANCELED::Errno) # 125
   end
 
-  Shellwords.join(['runsvdir', '-P', svdir])
-            .tap { |cmd| exec("#{cmd} < /dev/null") }
+  ['runsvdir', '-P', svdir].map(&:to_s).tap do |cmd|
+    File.open(File::NULL, 'w').tap { |stdin| STDIN = stdin }
+    exec(*cmd)
+  end
 end
