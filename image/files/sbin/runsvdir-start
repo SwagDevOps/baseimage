@@ -8,7 +8,7 @@ ENV['SVDIR'].tap do |svdir|
   end
 
   ['runsvdir', '-P', svdir].map(&:to_s).tap do |cmd|
-    File.open(File::NULL, 'w').tap { |stdin| STDIN = stdin }
+    File.open(File::NULL, 'w').tap { |stdin| $stdin = stdin }
     exec(*cmd)
   end
 end
