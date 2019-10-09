@@ -1,11 +1,12 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'shellwords'
-require 'pathname'
+require_relative '../env'
 
 # Provides environment export.
-class EnvExp < Hash
+class Boot::Env::Export < Hash
+  autoload(:Shellwords, 'shellwords')
+  autoload(:Pathname, 'pathname')
+
   # @param [ENV|Hash] env
   def initialize(env = ENV)
     env.clone.to_h.sort.to_h.each do |k, v|
@@ -29,39 +30,23 @@ class EnvExp < Hash
   #
   # @return [String]
   def append(filepath, format = :to_s)
+    # @formatter:off
     [
       self.public_send(format),
       Pathname.new(filepath).read.lstrip,
     ].join("\n")
+    # @formatter:on
   end
 
   # Get string representation preceded by the content of given file.
   #
   # @return [String]
   def prepend(filepath, format = :to_s)
+    # @formatter:off
     [
       Pathname.new(filepath).read.rstrip,
       self.public_send(format),
     ].join("\n")
+    # @formatter:on
   end
-end
-
-# Execution
-#
-# Write files:
-# * /etc/profile.d/environment.sh
-# * /etc/environment
-#
-# Shares environment, as seen from Docker, to be seen from shells (ssh).
-EnvExp.new.tap do |env|
-  env.delete_if do |k, v|
-    %w[PWD HOME LOGNAME USER USERNAME HOSTNAME].include?(k)
-  end
-end.freeze.tap do |env|
-  {
-    '/etc/profile.d/environment.sh' => ->(fp) { fp.write(env.export) },
-    '/etc/environment' => ->(fp) { fp.write(env.prepend(fp)) }
-  }.map do |filepath, func|
-    Thread.new { func.call(Pathname.new(filepath)) }
-  end.map(&:join)
 end

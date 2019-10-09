@@ -6,12 +6,3 @@ require 'bohu/dsl'
 'root'.tap do |user|
   change_shell(login: user, login_shell: '/bin/bash')
 end
-
-'syslog'.tap do |group|
-  create_group(name: group, system: true)
-
-  '/var/log'.tap do |path|
-    chown('root', group, path)
-    chmod(0o775, path)
-  end
-end

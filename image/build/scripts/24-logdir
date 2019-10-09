@@ -24,8 +24,4 @@ Pathname.new('/var/log').tap do |logdir|
       end
     end
   end
-
-  logdir.join('ylem').tap do |logfile|
-    chmod(0o640, logfile) if logfile.file?
-  end
 end

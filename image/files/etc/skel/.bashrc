@@ -13,14 +13,14 @@ esac
 (f=/etc/profile; test -f "${f}" && test -r "${f}") && {
     . /etc/profile
 }
-
 # Environment --------------------------------------------------------
 export USER=${USER-$(whoami)}
 export HOSTNAME=${HOSTNAME-$(hostname)}
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
 # History ------------------------------------------------------------
 shopt -s histappend
-export HISTCONTROL='ignoreboth,ignoredups'
+export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+export HISTCONTROL='ignoreboth:erasedups'
 export HISTSIZE=1000
 export HISTFILESIZE=2000
 # Misc ---------------------------------------------------------------

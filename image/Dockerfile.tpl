@@ -1,6 +1,6 @@
 # vim: ft=dockerfile
 
-FROM alpine:3.8
+FROM alpine:3.9.4
 
 <?rb
 self.singleton_class.__send__(:define_method, :quote) do |input|
@@ -19,7 +19,7 @@ ENV INITRD=no \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     EDITOR=vim \
-    SVDIR=/var/service \
+    SVDIR=/var/services \
     SVWAIT=4
 
 RUN apk add --no-cache \
@@ -28,17 +28,23 @@ RUN apk add --no-cache \
         curl sed tar grep shadow pwgen rsync \
         vim less coreutils sed procps \
         dropbear dropbear-convert \
-        ruby ruby-bundler \
-        ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json \
-        openssh-client git
+        ruby ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json && \
+        rm -fv /etc/crontabs/root
 
 COPY build /build
-RUN /build/run
+RUN chmod -v 755 /build/run && \
+    find /build/scripts/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
+    /build/run
+
 COPY files /
-RUN rsync -rua /etc/skel/.*[:alnum:]* /root/
+RUN chmod -v 755 /boot/run \
+          /sbin/runsvdir-start && \
+    find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
+    rsync -rua /etc/skel/.*[:alnum:]* /root/ && \
+    find /root/ -type f -name ".*" -exec chmod -v 400 {} \;
 
 ENTRYPOINT ["/boot/run"]
-CMD ["/sbin/runsvdir-start"]
+CMD ["runsvdir-start"]
 
 # Local Variables:
 # mode: Dockerfile

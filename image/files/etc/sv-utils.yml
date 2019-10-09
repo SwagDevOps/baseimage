@@ -8,4 +8,4 @@ loggerd:
 control:
   futils: 'quiet'
   method: 'cp'
-  paths: ['/etc/service']
+  paths: ['/etc/services']

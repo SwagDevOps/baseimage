@@ -3,9 +3,8 @@
 
 # Send output to the container logs collector,
 # send output to PID 1's stdio streams within the container.
-output = '/proc/1/fd/2'
 
-service(['/sbin/syslogd', '-Dnb10', '-s200', '-O', output], group: :syslog).call
+service(['/sbin/syslogd', '-SnO', '/proc/1/fd/2']).call
 
 # Local Variables:
 # mode: ruby
