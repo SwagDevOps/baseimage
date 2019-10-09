@@ -8,7 +8,7 @@ describe 'sbin files', :sbin do
     it { should be_grouped_into 'root' }
     it { should be_mode 755 }
 
-    its(:md5sum) { should eq '490a5b2b162606ab6c8ebf61b0e431a2' }
+    its(:md5sum) { should eq '1594843d8c234480cff25fdf5f792174' }
   end
 
   describe file('/sbin/ylem') do
