@@ -40,7 +40,6 @@ COPY files /
 RUN chmod -v 755 /boot/run \
           /sbin/runsvdir-start && \
     find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
-    rm -rf /etc/service/ && \
     rsync -rua /etc/skel/.*[:alnum:]* /root/ && \
     find /root/ -type f -name ".*" -exec chmod -v 400 {} \;
 
