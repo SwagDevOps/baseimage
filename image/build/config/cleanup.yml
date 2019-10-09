@@ -4,3 +4,6 @@
 - '/var/cache'
 - '/build'
 - '/etc/profile.d/color_prompt'
+- '/etc/service/'
+- '/etc/passwd-'
+- '/etc/group-'
