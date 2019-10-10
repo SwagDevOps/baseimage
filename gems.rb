@@ -7,7 +7,7 @@ git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 group :default do
   gem 'kamaze-docker_image', \
-      github: 'SwagDevOps/kamaze-docker_image', branch: 'master'
+      github: 'SwagDevOps/kamaze-docker_image', branch: 'develop'
 
   gem 'kamaze-version', '~> 1.0'
   gem 'rake', '~> 12.3'

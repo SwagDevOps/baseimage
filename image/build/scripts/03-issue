@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pathname'
+require 'fileutils'
+# rubocop:disable Style/MixinUsage
+include(FileUtils::Verbose)
+# rubocop:enable Style/MixinUsage
+
+# Provide `/etc/issue*` files
+#
+# `/etc/issue.net` is created (not a default file on Alpine).
+# `/etc/issue` is a little bit uncluttered.
+Pathname.new('/etc/alpine-release').read.rstrip.tap do |version|
+  # @formatter:off
+  {
+    '/etc/issue': "Alpine Linux #{version} \\n \\l\n\n",
+    '/etc/issue.net': "Alpine #{version}\n",
+  }.sort.each do |file, content|
+    Pathname.new(file.to_s).write(content)
+
+    chmod(0o444, file.to_s)
+  end
+  # @formatter:on
+end

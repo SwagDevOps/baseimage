@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# noinspection RubyResolve
+require '/boot/lib/ruby/boot/env'
+
+# This script SHOULD be replaced by ylem "hooks" when availbale.
+
+autoload(:Pathname, 'pathname')
+autoload(:FileUtils, 'fileutils')
+# rubocop:disable Style/MixinUsage
+include(FileUtils::Verbose)
+# rubocop:enable Style/MixinUsage
+
+at_exit { GC.start }
+
+Dir['/boot/{.[^\.]*,*}'].sort.tap do |paths|
+  Boot::ThreadPool.new(wait: true) do |pool|
+    paths.map do |fp|
+      pool.schedule do
+        rm_rf(fp) unless Pathname.new(fp).mountpoint?
+      end
+    end
+  end
+end

@@ -9,9 +9,7 @@ describe 'installed packages', :packages do
     %w[curl sed tar grep shadow pwgen rsync],
     %w[vim less coreutils sed procps],
     %w[dropbear dropbear-convert],
-    %w[ruby ruby-bundler],
-    %w[ruby-bigdecimal ruby-etc ruby-fiddle ruby-json],
-    %w[openssh-client git],
+    %w[ruby ruby-bigdecimal ruby-etc ruby-fiddle ruby-json],
   ].flatten.each do |package|
     describe command("/sbin/apk info -e #{package}") do
       its(:stdout) { should match(/^#{package}$/) }

@@ -1,5 +1,9 @@
 ---
+- '/opt'
 - '/root/.gem/'
-- '/var/cache/apk/*'
+- '/var/cache'
 - '/build'
 - '/etc/profile.d/color_prompt'
+- '/etc/service/'
+- '/etc/passwd-'
+- '/etc/group-'

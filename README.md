@@ -1,6 +1,6 @@
 # Alpine Server Image
 
-Image based on ``alpine:3.8`` ([release notes][release:2018-06-26]).
+Image based on ``alpine:3.9.4`` ([release notes][release:2019-01-29]).
 
 This image consumes less than 6MB RAM (on startup).
 
@@ -16,9 +16,9 @@ docker ps | awk '{print $1}' | grep -v CONTAINER | while read line; do docker ps
 
 This image brings a 3 parts init system, composed of:
 
-1. [``dumb-init``][dumb-init] minimal init system for Linux containers
-2. [``ylem``][ylem] startup scripts execution
-2. [``runit``][runit] services management
+1. [``ylem``][ylem] startup scripts execution
+2. [``dumb-init``][dumb-init] minimal init system for Linux containers
+3. [``runit``][runit] services management
 
 ## Try
 
@@ -32,24 +32,23 @@ bundle exec rake build start exec
 ## Run tests
 
 ```
-mkdir -p ssh/allow
-cp ~/.ssh/id_rsa.pub ssh/allow/root
-bundle exec rake restart
-bundle exec rspec
+mkdir -p ssh/authorized_keys
+cp ~/.ssh/id_rsa.pub ssh/authorized_keys/root
+bundle exec rake restart test
 ```
 
 Tests are executed over ``SSH``, and rely on minimal dependencies.
 
-## Doker Hub
+## Docker Hub
 
 Also available on Docker Hub: [swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
 
 ```sh
-docker pull swagdevops/alpine_server:3.8.1
+docker pull swagdevops/alpine_server:3.9.0
 ```
 
 ```
-FROM swagdevops/alpine_server:3.8.1
+FROM swagdevops/alpine_server:3.9.0
 ```
 
 ## See also
@@ -59,6 +58,7 @@ FROM swagdevops/alpine_server:3.8.1
 
 * [Petit état de l'art des systèmes d'initialisation][linuxfr:petit-etat-de-l-art]
 
+[release:2019-01-29]: https://alpinelinux.org/posts/Alpine-3.9.0-released.html
 [release:2018-06-26]: https://alpinelinux.org/posts/Alpine-3.8.0-released.html
 [dumb-init]: https://github.com/Yelp/dumb-init
 [ylem]: https://github.com/SwagDevOps/ylem
