@@ -15,7 +15,7 @@ include(FileUtils::Verbose)
 at_exit { GC.start }
 
 Dir['/boot/{.[^\.]*,*}'].sort.tap do |paths|
-  Boot::ThreadPool.new(wait: true) do |pool|
+  Boot::ThreadPool.new do |pool|
     paths.map do |fp|
       pool.schedule do
         rm_rf(fp) unless Pathname.new(fp).mountpoint?

@@ -88,7 +88,7 @@ class Boot::SSH::DropbearSetup
   # @return [self]
   def make_directories
     self.tap do
-      Boot::ThreadPool.new(wait: true) do |pool|
+      Boot::ThreadPool.new do |pool|
         boot_directories.clone.push(confdir).map do |fp|
           pool.schedule { mkdir_p(fp.to_s) unless fp.exist? }
         end
