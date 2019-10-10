@@ -1,6 +1,6 @@
 # vim: ft=dockerfile
 
-FROM alpine:3.9.4
+FROM alpine:3.10.2
 
 <?rb
 self.singleton_class.__send__(:define_method, :quote) do |input|
