@@ -32,6 +32,7 @@ class Boot::ThreadPool
     @cpuinfo ||= self.class.cpuinfo
   end
 
+  # @return [Array<Thread>]
   def call
     self.run
   end
@@ -78,18 +79,32 @@ class Boot::ThreadPool
   # @retrun [Integer]
   attr_accessor :pools_size
 
-  # @return [self]
+  # Execute scheduled jobs by pools.
+  #
+  # @return [Array<Thread>]
   def run
     [].tap do |pool|
       until jobs.empty?
-        pools_size.times do
-          jobs.shift.tap do |job|
-            pool.push(Thread.new { job.call }) unless job.nil?
-          end
+        jobs.shift(pools_size).each do |job|
+          thread(&job).tap { |thread| pool.push(thread) }
         end
 
         sleep(0.0001) while pool.map(&:alive?).include?(true)
       end
+    end
+  end
+
+  # Execute given block as thread.
+  #
+  # If any thread is aborted by an exception,
+  # the raised exception will be re-raised in the main thread.
+  #
+  # @return [Thread]
+  def thread(&block)
+    Thread.new do
+      Thread.current.abort_on_exception = true
+
+      block.call
     end
   end
 end
