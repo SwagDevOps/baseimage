@@ -132,7 +132,7 @@ DEPENDENCIES
   pry (~> 0.11)
   pry-coolline (~> 0.2)
   rake (~> 12.3)
-  rspec (~> 3.8)
+  rspec (~> 3.9)
   rubocop (~> 0.58)
   serverspec (~> 2.41)
   sys-proc (~> 1.1, >= 1.1.2)
