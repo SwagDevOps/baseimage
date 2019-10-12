@@ -26,6 +26,6 @@ group :development do
 end
 
 group :test do
-  gem 'rspec', '~> 3.8'
+  gem 'rspec', '~> 3.9'
   gem 'serverspec', '~> 2.41'
 end
