@@ -34,7 +34,7 @@ class Boot::Services::Setup
     rm_rf(svdir)
     mkdir_p(svdir, mode: 0o755)
 
-    Boot::ThreadPool.new(wait: true) do |pool|
+    Boot::ThreadPool.new do |pool|
       [:dump_services, :load_services].map do |m|
         pool.schedule { __send__(m) }
       end
@@ -119,7 +119,7 @@ class Boot::Services::Setup
   def load_services
     require 'sv/utils/cli'
 
-    Boot::ThreadPool.new(wait: true) do |pool|
+    Boot::ThreadPool.new do |pool|
       commands.map do |args|
         pool.schedule { Sv::Utils::CLI.call(:control, args) }
       end
