@@ -3,9 +3,13 @@
 if Gem::Specification.find_all_by_name('sys-proc').any?
   require 'sys/proc'
 
-  Sys::Proc.progname = 'rspec'
+  Sys::Proc.progname = 'serverspec'
 end
 
+# noinspection RubyResolve
 require 'rbconfig'
-require_relative 'spec_helper/alpine_version'
-require_relative 'spec_helper/serverspec'
+# noinspection RubyResolve
+# noinspection RubyLiteralArrayInspection
+['image', 'alpine_version', 'image_version', 'serverspec'].each do |fname|
+  require_relative "spec_helper/#{fname}"
+end
