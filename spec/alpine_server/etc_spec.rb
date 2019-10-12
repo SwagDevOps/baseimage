@@ -8,12 +8,14 @@ describe 'etc contents', :etc do
     its(:content) { should eq("#{ALPINE_VERSION}\n") }
   end
 
+  # noinspection RubyLiteralArrayInspection
   # @formatter:off
   [
     '/etc/profile.d/environment.sh',
     '/etc/environment',
     '/etc/issue',
-    '/etc/issue.net'
+    '/etc/issue.net',
+    '/etc/image.yml'
   ].each do |fp|
     describe file(fp) do
       it { should be_file }
@@ -35,6 +37,13 @@ describe '/etc/issue* files', :etc do
   describe file('/etc/issue.net') do
     its(:content) do
       should eq("Alpine #{ALPINE_VERSION}\n")
+    end
+  end
+
+  describe file('/etc/image.yml') do
+    # noinspection RubyLiteralArrayInspection
+    ['major', 'minor', 'patch', 'maintainer', 'email', 'homepage'].each do |k|
+      its(:content_as_yaml) { should include(k => IMAGE_VERSION[k]) }
     end
   end
 end

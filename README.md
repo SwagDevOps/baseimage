@@ -44,11 +44,11 @@ Tests are executed over ``SSH``, and rely on minimal dependencies.
 Also available on Docker Hub: [swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
 
 ```sh
-docker pull swagdevops/alpine_server:3.9.0
+docker pull swagdevops/alpine_server:3.10.0
 ```
 
 ```
-FROM swagdevops/alpine_server:3.9.0
+FROM swagdevops/alpine_server:3.10.0
 ```
 
 ## See also
