@@ -1,6 +1,6 @@
 # Alpine Server Image
 
-Image based on ``alpine:3.9.4`` ([release notes][release:2019-05-09]).
+Image based on ``alpine:3.10.2`` ([release notes][release:2019-08-20]).
 
 This image consumes less than 6MB RAM (on startup).
 
@@ -58,6 +58,9 @@ FROM swagdevops/alpine_server:3.10.0
 
 * [Petit état de l'art des systèmes d'initialisation][linuxfr:petit-etat-de-l-art]
 
+<!-- hyperlinks references -->
+
+[release:2019-08-20]: https://alpinelinux.org/posts/Alpine-3.10.2-released.html
 [release:2019-05-09]: https://alpinelinux.org/posts/Alpine-3.9.4-released.html
 [release:2019-01-29]: https://alpinelinux.org/posts/Alpine-3.9.0-released.html
 [release:2018-06-26]: https://alpinelinux.org/posts/Alpine-3.8.0-released.html
