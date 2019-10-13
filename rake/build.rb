@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
-autoload :Vendorer, 'vendorer'
-autoload :CLOBBER, 'rake/clean'
-autoload :Tenjin, 'tenjin'
+# @formatter:off
+# noinspection RubyBlockToMethodReference
+{
+  Vendorer: 'vendorer',
+  CLOBBER: 'rake/clean',
+  Tenjin: 'tenjin',
+}.each { |k, v| autoload(k, v) }
+# @formatter:on
 
 task default: [:build]
 
@@ -18,14 +23,17 @@ end
 
 task image.dockerfile do |task|
   image.version.to_h.merge(image: image).tap do |context|
+    # @formatter:off
     Tenjin::Engine
       .new(cache: false)
       .render("#{task.name}.tpl", context)
       .tap { |output| Pathname.new(task.name).write(output) }
   end
+  # @formatter:on
 end
 
-task image.vendor do |task, args|
+task image.vendor do |_task, args|
+  # noinspection RubyLiteralArrayInspection
   ['Vendorfile.rb', 'Vendorfile'].map { |f| image.path.join(f) }.tap do |files|
     Vendorer.new(update: args.to_a.include?('update')).tap do |v|
       self.image.vendor.tap do |dir|
