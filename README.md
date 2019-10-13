@@ -10,8 +10,10 @@ sleep 6 && \
 docker ps | awk '{print $1}' | grep -v CONTAINER | while read line; do docker ps | grep $line | awk '{printf $NF" "}' && echo "scale=2; $(cat /sys/fs/cgroup/memory/docker/$line*/memory.usage_in_bytes)/1024/1024" | bc -l; done | sort | column -t
 ```
 
+<a name="why"></a>
 ## Why?
 
+<a name="init_process"></a>
 ### A complete init process
 
 This image brings a 3 parts init system, composed of:
@@ -20,38 +22,63 @@ This image brings a 3 parts init system, composed of:
 2. [``dumb-init``][dumb-init] minimal init system for Linux containers
 3. [``runit``][runit] services management
 
+<a name="try"></a>
 ## Try
 
-```
+### From sources
+
+```sh
 git clone git@github.com:SwagDevOps/image-alpine_server.git
 cd image-alpine_server
 bundle install --path vendor/bundle --without development
 bundle exec rake build start exec
 ```
 
-## Run tests
+### From docker hub
+
+```sh
+docker run -d --rm --name trying.alpine_server swagdevops/alpine_server:VERSION 
 
 ```
+
+```sh
+docker exec -ti trying.alpine_server bash -l
+```
+
+<a name="tests"></a>
+## Run tests
+
+```sh
 mkdir -p ssh/authorized_keys
 cp ~/.ssh/id_rsa.pub ssh/authorized_keys/root
 bundle exec rake restart test
 ```
 
-Tests are executed over ``SSH``, and rely on minimal dependencies.
+Tests are executed over ``SSH``, and rely on minimal (host) dependencies.
 
-## Docker Hub
+<a name="using"></a>
+## Using as base image
 
-Also available on Docker Hub:
-[swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
+<a name="getting_started"></a>
+### Getting started
 
-```sh
-docker pull swagdevops/alpine_server:3.10.0
+The image is called [``swagdevops/alpine_server``][docker_hub.com:swagdevops/alpine_server], 
+and is available on the Docker registry.
+
+Use ``swagdevops/alpine_server`` as base image. 
+
+```dockerfile
+FROM swagdevops/alpine_server:VERSION
 ```
 
-```
-FROM swagdevops/alpine_server:3.10.0
-```
+To make your builds reproducible, you MUST lock down 
+to a specific version, DO NOT use `latest`.
+ATM, `latest` tag does not exist, as a result: you CAN NOT use it.
 
+See [releases][github.com:swagdevops/alpine/server/releases] 
+for a list of version numbers.
+
+<a name="see_also"></a>
 ## See also
 
 * [A minimal Ubuntu base image][phusion/baseimage-docker]
@@ -72,3 +99,4 @@ FROM swagdevops/alpine_server:3.10.0
 [qenv/alpine-base]: https://github.com/qenv/alpine-base
 [linuxfr:petit-etat-de-l-art]: https://linuxfr.org/news/petit-etat-de-l-art-des-systemes-d-initialisation-1
 [docker_hub.com:swagdevops/alpine_server]: https://hub.docker.com/r/swagdevops/alpine_server
+[github.com:swagdevops/alpine/server/releases]: https://github.com/SwagDevOps/image-alpine_server/releases
