@@ -7,6 +7,7 @@ if Gem::Specification.find_all_by_name('kamaze-project').any?
     Kamaze.project do |project|
       project.subject = Class.new { const_set(:VERSION, main.image.version) }
       project.name    = image.name
+      # noinspection RubyLiteralArrayInspection
       project.tasks   = [
         'cs:correct', 'cs:control', 'cs:pre-commit',
         'misc:gitignore',
