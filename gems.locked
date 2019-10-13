@@ -22,7 +22,7 @@ GEM
       excon (>= 0.47.0)
       multi_json
     dotenv (2.7.5)
-    dry-inflector (0.1.2)
+    dry-inflector (0.2.0)
     equatable (0.6.1)
     excon (0.67.0)
     interesting_methods (0.1.2)
