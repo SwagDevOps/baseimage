@@ -30,8 +30,9 @@ Kamaze::DockerImage.new do |config|
     end.call,
     ENV.fetch('image_name'),
   ].compact.join('/')
+  config.run_as = ENV.fetch('image_name').split('/').reverse
+                     .push(ENV['registry']).compact.join('.')
   # @formatter:on
-  config.run_as = [ENV.fetch('image_name'), ENV['registry']].compact.join('.')
 
   # @formatter:off
   config.commands.merge!(
