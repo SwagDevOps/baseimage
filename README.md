@@ -2,7 +2,7 @@
 
 Image based on ``alpine:3.10.2`` ([release notes][release:2019-08-20]).
 
-This image consumes less than 6MB RAM (on startup).
+This image SHOULD consume less than 6MB RAM on startup (depending on RAM installed).
 
 ```sh
 rake restart && \
@@ -41,7 +41,8 @@ Tests are executed over ``SSH``, and rely on minimal dependencies.
 
 ## Docker Hub
 
-Also available on Docker Hub: [swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
+Also available on Docker Hub:
+[swagdevops/alpine_server][docker_hub.com:swagdevops/alpine_server].
 
 ```sh
 docker pull swagdevops/alpine_server:3.10.0

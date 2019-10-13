@@ -1,10 +1,9 @@
-.#*
+/**/.*
 /**/vendor/
-/.*
 /image/Dockerfile
 /rake/config/*
 /ssh/*
-!/.env
+!/.env.dist
 !/.gitignore
 !/.rspec
 !/.rubocop.yml
