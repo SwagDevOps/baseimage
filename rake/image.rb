@@ -21,7 +21,7 @@ Kamaze::DockerImage.new do |config|
   config.name = [
     lambda do
       Pathname.new(__dir__).join('config/registries.yml').tap do |file|
-        if file.file? and ENV.key?('registry')
+        if !ENV['registry'].to_s.empty? and file.file?
           YAML.safe_load(file.read).tap { |h| return h.fetch(ENV['registry']) }
         end
       end
@@ -31,7 +31,8 @@ Kamaze::DockerImage.new do |config|
     ENV.fetch('image_name'),
   ].compact.join('/')
   config.run_as = ENV.fetch('image_name').split('/').reverse
-                     .push(ENV['registry']).compact.join('.')
+                     .concat([ENV['registry']].compact.reject(&:empty?))
+                     .join('.')
   # @formatter:on
 
   # @formatter:off
