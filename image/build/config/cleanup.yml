@@ -1,10 +1,10 @@
 ---
-- '/opt'
+- '/opt/'
 - '/root/.gem/'
 - '/var/cache/*'
-- '/build'
+- '/build/'
 - '/etc/profile.d/color_prompt'
 - '/etc/passwd-'
 - '/etc/group-'
-- '/etc/crontabs/root'
+- '/etc/crontabs/*'
 - '/etc/service/'
