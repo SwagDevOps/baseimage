@@ -1,6 +1,7 @@
 ---
 - '/opt'
 - '/root/.gem/'
+- '/var/cache/*'
 - '/build'
 - '/etc/profile.d/color_prompt'
 - '/etc/passwd-'
