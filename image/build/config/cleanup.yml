@@ -7,3 +7,4 @@
 - '/etc/passwd-'
 - '/etc/group-'
 - '/etc/crontabs/root'
+- '/etc/service/'
