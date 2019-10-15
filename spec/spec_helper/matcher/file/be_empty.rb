@@ -10,15 +10,17 @@ RSpec::Matchers.define :be_empty do
 
     autoload(:Shellwords, 'shellwords')
     # @formatter:off
-    args = Shellwords.join({
+    command = {
       true => ['ls', '-A', file.name],
       false => ['test', '-s', file.name]
-    }.fetch(file.directory?))
+    }.map do |k, v|
+      [k, Serverspec::Type::Command.new(Shellwords.join(v))]
+    end.to_h.fetch(file.directory?)
 
     {
       true => ->(cmd) { cmd.exit_status.zero? and cmd.stdout.empty? },
       false => ->(cmd) { cmd.exit_status.zero? }
-    }.fetch(file.directory?).call(Serverspec::Type::Command.new(args))
+    }.fetch(file.directory?).call(command)
     # @formatter:on
   end
 end
