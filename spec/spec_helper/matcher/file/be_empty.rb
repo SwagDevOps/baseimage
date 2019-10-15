@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-RSpec::Matchers.define :be_empty do
+RSpec::Matchers.define(:be_empty) do
   match do |file|
     [file.class.to_s.split('::').last, file.name].tap do |type, fname|
       "expected #{type} #{fname.inspect} to respond to `empty?`".tap do |msg|
         raise msg unless file.is_a?(Serverspec::Type::File)
       end
     end
+
+    return false unless file.exists?
 
     autoload(:Shellwords, 'shellwords')
     # @formatter:off
