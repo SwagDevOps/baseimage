@@ -13,7 +13,9 @@ require 'rbconfig'
 # noinspection RubyResolve
 # noinspection RubyLiteralArrayInspection
 [
-  'image', 'alpine_version', 'image_version',
+  'image',
+  'alpine_version',
+  'image_version',
   'serverspec',
   'monkey_patch',
   'matcher'
