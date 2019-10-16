@@ -8,8 +8,14 @@ end
 
 # noinspection RubyResolve
 require 'rbconfig'
+
+# @formatter:off
 # noinspection RubyResolve
 # noinspection RubyLiteralArrayInspection
-['image', 'alpine_version', 'image_version', 'serverspec', 'matcher'].each do |fname|
-  require_relative "spec_helper/#{fname}"
-end
+[
+  'image', 'alpine_version', 'image_version',
+  'serverspec',
+  'monkey_patch',
+  'matcher'
+].each { |fname| require_relative "spec_helper/#{fname}" }
+# @formatter:on
