@@ -8,6 +8,8 @@ class Serverspec::Type::File
 
   # @return [Boolean]
   def empty?
+    return false unless self.exists?
+
     # @formatter:off
     {
       true => ->(cmd) { cmd.exit_status.zero? and cmd.stdout.empty? },
