@@ -19,5 +19,5 @@ require 'rbconfig'
   'serverspec',
   'monkey_patch',
   'matcher'
-].each { |fname| require_relative "spec_helper/#{fname}" }
+].each { |fname| require("#{__FILE__.gsub(/\.rb$/, '')}/#{fname}") }
 # @formatter:on
