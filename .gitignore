@@ -7,5 +7,6 @@
 !/.gitignore
 !/.rspec
 !/.rubocop.yml
+!/image/files/etc/skel/.config
 !/rake/config/*.dist
 !/ssh/README.md
