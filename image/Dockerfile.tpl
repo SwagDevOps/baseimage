@@ -3,11 +3,11 @@
 FROM alpine:3.10.2
 
 <?rb
-self.singleton_class.__send__(:define_method, :quote) do |input|
-  input.to_s.inspect
+Pathname.new(__dir__).join('helper.rb').tap do |file|
+  self.instance_eval(file.read, file.to_s, 1)
 end
-# @see http://label-schema.org/rc1/#label-semantics
 ?>
+
 LABEL maintainer=#{quote('%s <%s>' % [@maintainer, @email])} \
       org.label-schema.name=#{quote(@image.name)} \
       org.label-schema.version=#{quote(@image.version)} \
@@ -22,13 +22,7 @@ ENV INITRD=no \
     SVDIR=/var/services \
     SVWAIT=4
 
-RUN apk add --no-cache \
-        bash bash-completion htop multitail screen \
-        runit dumb-init busybox libcap file tzdata \
-        curl sed tar grep shadow pwgen rsync \
-        neovim less coreutils sed procps \
-        dropbear dropbear-convert \
-        ruby ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json
+RUN apk add --no-cache #{Shellwords.join(packages)}
 
 COPY build /build
 RUN chmod -v 755 /build/run && \
