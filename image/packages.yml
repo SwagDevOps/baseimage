@@ -1,0 +1,32 @@
+---
+apk:
+  - bash
+  - bash-completion
+  - busybox
+  - coreutils
+  - curl
+  - dropbear
+  - dropbear-convert
+  - dumb-init
+  - file
+  - grep
+  - htop
+  - less
+  - libcap
+  - multitail
+  - neovim
+  - procps
+  - pwgen
+  - rsync
+  - ruby
+  - ruby-bigdecimal
+  - ruby-etc
+  - ruby-fiddle
+  - ruby-json
+  - ruby-sdbm
+  - runit
+  - screen
+  - sed
+  - shadow
+  - tar
+  - tzdata
