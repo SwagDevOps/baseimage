@@ -2,32 +2,31 @@
 apk:
   - bash
   - bash-completion
-  - htop
-  - multitail
-  - screen
-  - runit
-  - dumb-init
   - busybox
-  - file
-  - tzdata
-  - curl
-  - sed
-  - tar
-  - grep
-  - shadow
-  - pwgen
-  - libcap
-  - rsync
-  - vim
-  - less
   - coreutils
-  - sed
-  - procps
+  - curl
   - dropbear
   - dropbear-convert
+  - dumb-init
+  - file
+  - grep
+  - htop
+  - less
+  - libcap
+  - multitail
+  - neovim
+  - procps
+  - pwgen
+  - rsync
   - ruby
   - ruby-bigdecimal
   - ruby-etc
   - ruby-fiddle
-  - ruby-sdbm
   - ruby-json
+  - ruby-sdbm
+  - runit
+  - screen
+  - sed
+  - shadow
+  - tar
+  - tzdata
