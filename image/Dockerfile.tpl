@@ -26,7 +26,7 @@ RUN apk add --no-cache \
         bash bash-completion htop multitail screen \
         runit dumb-init busybox libcap file tzdata \
         curl sed tar grep shadow pwgen rsync \
-        vim less coreutils sed procps \
+        neovim less coreutils sed procps \
         dropbear dropbear-convert \
         ruby ruby-bigdecimal ruby-etc ruby-fiddle ruby-sdbm ruby-json
 
@@ -41,7 +41,8 @@ RUN chmod 444 /etc/image.yml && \
     chmod -v 755 /boot/run /sbin/runsvdir-start && \
     find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
     rsync -rua /etc/skel/.*[:alnum:]* /root/ && \
-    find /root/ -type f -name ".*" -exec chmod -v 400 {} \;
+    find /root/ -type f -name ".*" -exec chmod -v 400 {} \; && \
+    (cd /usr/bin && ln -s nvim vim)
 
 ENTRYPOINT ["/boot/run"]
 CMD ["runsvdir-start"]
