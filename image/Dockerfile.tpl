@@ -1,12 +1,11 @@
 # vim: ft=dockerfile
-
-FROM alpine:3.10.2
-
 <?rb
 Pathname.new(__dir__).join('helper.rb').tap do |file|
   self.instance_eval(file.read, file.to_s, 1)
 end
 ?>
+
+FROM #{quote(@from)}
 
 LABEL maintainer=#{quote('%s <%s>' % [@maintainer, @email])} \
       org.label-schema.name=#{quote(@image.name)} \
