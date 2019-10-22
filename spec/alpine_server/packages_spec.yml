@@ -28,5 +28,6 @@ apk:
   - screen
   - sed
   - shadow
+  - su-exec
   - tar
   - tzdata
