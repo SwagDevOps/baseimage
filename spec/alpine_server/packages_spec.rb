@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
-# @note This spec does not use the ``be_installed`` matcher
-#       because it seems too permissive (lacks of efficiency).
+autoload(:Pathname, 'pathname')
+autoload(:YAML, 'yaml')
+
+# @note This spec was using ``command("/sbin/apk info -e #{package}")``
+#        with ``its(:stdout) { should match(/^#{package}$/) }``
+#        ATM it use ``be_installed`` matcher
 describe 'installed packages', :packages do
-  [
-    %w[bash bash-completion htop multitail screen],
-    %w[runit dumb-init busybox file tzdata],
-    %w[curl sed tar grep shadow pwgen rsync],
-    %w[vim less coreutils sed procps],
-    %w[dropbear dropbear-convert],
-    %w[ruby ruby-bigdecimal ruby-etc ruby-fiddle ruby-json],
-  ].flatten.each do |package|
-    describe command("/sbin/apk info -e #{package}") do
-      its(:stdout) { should match(/^#{package}$/) }
+  Pathname.new(__FILE__.gsub(/\.rb$/, '.yml')).read.tap do |c|
+    YAML.safe_load(c).fetch('apk').each do |package|
+      describe package(package) do
+        it { should be_installed.by('apk') }
+      end
     end
   end
 end

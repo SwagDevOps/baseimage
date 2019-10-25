@@ -1,6 +1,6 @@
 # vim: ft=sh
 
---require './spec/spec_helper.rb'
+--require './spec/helper.rb'
 --color
 --pattern './spec/**/*_spec.rb'
 --format 'progress'

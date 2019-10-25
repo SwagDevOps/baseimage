@@ -4,8 +4,6 @@
 require 'rubygems'
 require 'bundler/setup'
 
-ENV['image_name'] ||= 'swagdevops/alpine_server'
-
 if Gem::Specification.find_all_by_name('sys-proc').any?
   require 'sys/proc'
 
@@ -13,6 +11,11 @@ if Gem::Specification.find_all_by_name('sys-proc').any?
 end
 
 Dir.chdir(__dir__) do
+  autoload(:Dotenv, 'dotenv')
+
+  Dotenv.load
+  ENV['image_name'] ||= 'alpine_server'
+
   %w[image project build]
     .each { |req| require_relative "rake/#{req}" }
 end
