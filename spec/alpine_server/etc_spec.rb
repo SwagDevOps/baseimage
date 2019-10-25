@@ -41,8 +41,7 @@ describe '/etc/issue* files', :etc do
   end
 
   describe file('/etc/image.yml') do
-    # noinspection RubyLiteralArrayInspection
-    ['major', 'minor', 'patch', 'maintainer', 'email', 'homepage'].each do |k|
+    %w[from major minor patch maintainer email homepage].each do |k|
       its(:content_as_yaml) { should include(k => IMAGE_VERSION[k]) }
     end
   end
