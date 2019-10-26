@@ -1,6 +1,6 @@
 # Alpine Server Image
 
-Image based on ``alpine:3.10.2`` ([release notes][release:2019-08-20]).
+Image based on ``alpine:3.10.3`` ([release notes][release:2019-10-21]).
 
 This image SHOULD consume less than 6MB RAM on startup (depending on RAM installed).
 
@@ -37,7 +37,7 @@ bundle exec rake build start exec
 ### From docker hub
 
 ```sh
-docker run -d --rm --name trying.alpine_server swagdevops/alpine_server:VERSION 
+docker run -d --rm --name trying.alpine_server swagdevops/alpine_server:VERSION
 
 ```
 
@@ -62,20 +62,20 @@ Tests are executed over ``SSH``, and rely on minimal (host) dependencies.
 <a name="getting_started"></a>
 ### Getting started
 
-The image is called [``swagdevops/alpine_server``][docker_hub.com:swagdevops/alpine_server], 
+The image is called [``swagdevops/alpine_server``][docker_hub.com:swagdevops/alpine_server],
 and is available on the Docker registry.
 
-Use ``swagdevops/alpine_server`` as base image. 
+Use ``swagdevops/alpine_server`` as base image.
 
 ```dockerfile
 FROM swagdevops/alpine_server:VERSION
 ```
 
-To make your builds reproducible, you MUST lock down 
-to a specific version, DO NOT use `latest`.
+To make your builds reproducible, you MUST lock down
+to a specific version, DO NOT use [`latest`][vsupalov.com:wrong-with-latest].
 ATM, `latest` tag does not exist, as a result: you CAN NOT use it.
 
-See [releases][github.com:swagdevops/alpine/server/releases] 
+See [releases][github.com:swagdevops/alpine/server/releases]
 for a list of version numbers.
 
 <a name="see_also"></a>
@@ -88,6 +88,7 @@ for a list of version numbers.
 
 <!-- hyperlinks references -->
 
+[release:2019-10-21]: https://alpinelinux.org/posts/Alpine-3.10.3-released.html
 [release:2019-08-20]: https://alpinelinux.org/posts/Alpine-3.10.2-released.html
 [release:2019-05-09]: https://alpinelinux.org/posts/Alpine-3.9.4-released.html
 [release:2019-01-29]: https://alpinelinux.org/posts/Alpine-3.9.0-released.html
@@ -100,3 +101,4 @@ for a list of version numbers.
 [linuxfr:petit-etat-de-l-art]: https://linuxfr.org/news/petit-etat-de-l-art-des-systemes-d-initialisation-1
 [docker_hub.com:swagdevops/alpine_server]: https://hub.docker.com/r/swagdevops/alpine_server
 [github.com:swagdevops/alpine/server/releases]: https://github.com/SwagDevOps/image-alpine_server/releases
+[vsupalov.com:wrong-with-latest]: https://vsupalov.com/docker-latest-tag/
