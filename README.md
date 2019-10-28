@@ -10,6 +10,8 @@ sleep 6 && \
 docker ps | awk '{print $1}' | grep -v CONTAINER | while read line; do docker ps | grep $line | awk '{printf $NF" "}' && echo "scale=2; $(cat /sys/fs/cgroup/memory/docker/$line*/memory.usage_in_bytes)/1024/1024" | bc -l; done | sort | column -t
 ```
 
+For an image size around ``56MB``.
+
 <a name="why"></a>
 ## Why?
 
@@ -21,6 +23,8 @@ This image brings a 3 parts init system, composed of:
 1. [``ylem``][ylem] startup scripts execution
 2. [``dumb-init``][dumb-init] minimal init system for Linux containers
 3. [``runit``][runit] services management
+
+It would solve [the PID 1 problem][blog.phusion.nl:docker-and-the-pid-1-zombie-reaping-problem].
 
 <a name="try"></a>
 ## Try
@@ -96,6 +100,7 @@ for a list of version numbers.
 [dumb-init]: https://github.com/Yelp/dumb-init
 [ylem]: https://github.com/SwagDevOps/ylem
 [runit]: http://smarden.org/runit/
+[blog.phusion.nl:docker-and-the-pid-1-zombie-reaping-problem]: https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/
 [phusion/baseimage-docker]: https://github.com/phusion/baseimage-docker
 [qenv/alpine-base]: https://github.com/qenv/alpine-base
 [linuxfr:petit-etat-de-l-art]: https://linuxfr.org/news/petit-etat-de-l-art-des-systemes-d-initialisation-1
