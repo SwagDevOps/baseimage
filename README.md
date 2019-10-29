@@ -26,6 +26,21 @@ This image brings a 3 parts init system, composed of:
 
 It would solve [the PID 1 problem][blog.phusion.nl:docker-and-the-pid-1-zombie-reaping-problem].
 
+<a name="whats_inside"></a>
+## What's inside the image?
+
+| Component        | Comment             |
+| ---------------- | ------------------- |
+| Alpine Linux     | Alpine Linux is a security-oriented, lightweight Linux distribution based on musl libc and busybox. |
+| ``ylem``         | Startup scripts execution. |
+| ``dumb-init``    | A minimal init system for Linux containers. |
+| ``runit``  (``runsvdir``) | Used as a service supervisor. Supports restarting daemons when they crash. |
+| ``su-exec``      | execute a program with different privileges. The program will be exceuted directly and not run as a child, like su and sudo does, which avoids TTY and signal issues (see [README][su-exec:README#parentchild-handling]). It is only 10kb. |
+| ``sv-utils``     | [``sv-utils``][github.com:SwagDevOps/sv-utils] is an attempt to bring [DRY principle][dry-definition] to runit services creation. |
+| ``syslog``       | Only listens locally. All syslog messages are forwarded to ``docker logs``. |
+| ``dropbear``     | Dropbear is a relatively small SSH server. It has a small memory footprint and is compatible with OpenSSH ``~/.ssh/authorized_keys`` public key authentication. |
+| ``crond``        | Comes with a cron system by default, provided by busybox. |
+
 <a name="try"></a>
 ## Try
 
@@ -100,6 +115,8 @@ for a list of version numbers.
 [dumb-init]: https://github.com/Yelp/dumb-init
 [ylem]: https://github.com/SwagDevOps/ylem
 [runit]: http://smarden.org/runit/
+[github.com:SwagDevOps/sv-utils]: https://github.com/SwagDevOps/sv-utils
+[su-exec:README#parentchild-handling]: https://github.com/ncopa/su-exec/blob/master/README.md#tty--parentchild-handling
 [blog.phusion.nl:docker-and-the-pid-1-zombie-reaping-problem]: https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/
 [phusion/baseimage-docker]: https://github.com/phusion/baseimage-docker
 [qenv/alpine-base]: https://github.com/qenv/alpine-base
@@ -107,3 +124,4 @@ for a list of version numbers.
 [docker_hub.com:swagdevops/alpine_server]: https://hub.docker.com/r/swagdevops/alpine_server
 [github.com:swagdevops/alpine/server/releases]: https://github.com/SwagDevOps/image-alpine_server/releases
 [vsupalov.com:wrong-with-latest]: https://vsupalov.com/docker-latest-tag/
+[dry-definition]: https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
