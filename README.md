@@ -34,7 +34,7 @@ It would solve [the PID 1 problem][blog.phusion.nl:docker-and-the-pid-1-zombie-r
 | Alpine Linux     | Alpine Linux is a security-oriented, lightweight Linux distribution based on musl libc and busybox. |
 | ``ylem``         | Startup scripts execution. |
 | ``dumb-init``    | A minimal init system for Linux containers. |
-| ``runit``  (``runsvdir``) | Used as a service supervisor. Supports restarting daemons when they crash. |
+| ``runit``        | Used as a service supervisor. Supports restarting daemons when they crash. See: [``runsvdir``][manpage:runsvdir]. |
 | ``su-exec``      | execute a program with different privileges. The program will be exceuted directly and not run as a child, like su and sudo does, which avoids TTY and signal issues (see [README][su-exec:README#parentchild-handling]). It is only 10kb. |
 | ``sv-utils``     | [``sv-utils``][github.com:SwagDevOps/sv-utils] is an attempt to bring [DRY principle][dry-definition] to runit services creation. |
 | ``syslog``       | Only listens locally. All syslog messages are forwarded to ``docker logs``. |
@@ -118,6 +118,7 @@ for a list of version numbers.
 [github.com:SwagDevOps/sv-utils]: https://github.com/SwagDevOps/sv-utils
 [su-exec:README#parentchild-handling]: https://github.com/ncopa/su-exec/blob/master/README.md#tty--parentchild-handling
 [blog.phusion.nl:docker-and-the-pid-1-zombie-reaping-problem]: https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/
+[manpage:runsvdir]: http://manpages.ubuntu.com/manpages/bionic/man8/runsvdir.8.html
 [phusion/baseimage-docker]: https://github.com/phusion/baseimage-docker
 [qenv/alpine-base]: https://github.com/qenv/alpine-base
 [linuxfr:petit-etat-de-l-art]: https://linuxfr.org/news/petit-etat-de-l-art-des-systemes-d-initialisation-1
