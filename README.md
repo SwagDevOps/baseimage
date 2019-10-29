@@ -35,7 +35,7 @@ It would solve [the PID 1 problem][blog.phusion.nl:docker-and-the-pid-1-zombie-r
 | ``ylem``         | Startup scripts execution. |
 | ``dumb-init``    | A minimal init system for Linux containers. |
 | ``runit``        | Used as a service supervisor. Supports restarting daemons when they crash. See: [``runsvdir``][manpage:runsvdir]. |
-| ``su-exec``      | execute a program with different privileges. The program will be exceuted directly and not run as a child, like su and sudo does, which avoids TTY and signal issues (see [README][su-exec:README#parentchild-handling]). It is only 10kb. |
+| ``su-exec``      | Execute a program with different privileges. The program will be exceuted directly and not run as a child, like ``su`` and ``sudo`` does, which avoids TTY and signal issues (see [README][su-exec:README#parentchild-handling]). It is only ``10kb``. |
 | ``sv-utils``     | [``sv-utils``][github.com:SwagDevOps/sv-utils] is an attempt to bring [DRY principle][dry-definition] to runit services creation. |
 | ``syslog``       | Only listens locally. All syslog messages are forwarded to ``docker logs``. |
 | ``dropbear``     | Dropbear is a relatively small SSH server. It has a small memory footprint and is compatible with OpenSSH ``~/.ssh/authorized_keys`` public key authentication. |
