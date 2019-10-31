@@ -97,12 +97,68 @@ ATM, `latest` tag does not exist, as a result: you CAN NOT use it.
 See [releases][github.com:swagdevops/alpine/server/releases]
 for a list of version numbers.
 
+<a name="adding_additional_daemons"></a>
+### Adding additional daemons
+
+A daemon is a program which runs in the background of its system, such
+as a web server.
+
+You can add additional daemons (for example, your own app) to the image
+by creating runit service directories.
+You only have to write a small script to start your daemon.
+[``runsv``][manpage:runsv] will execute your script,
+and (by default) restart it upon its exit, after waiting one second.
+
+The shell script must be called ``run``, executable, and placed in the directory
+``/etc/services/<NAME>``.
+Additionally, a file ``manifest.yml`` must be present, with the following content:
+
+```yaml
+---
+enabled: true
+auto_start: true
+```
+
+``runsv`` will invoke ``run`` after your container starts.
+
+#### Example for a ``run`` script
+
+```ruby
+#!/usr/bin/env svrun
+# vim: ai ts=2 sts=2 et sw=2 ft=ruby
+
+Dir.chdir('/var/www/localhost') do
+  service(['bundle',
+           'exec',
+           'rake',
+           'serve',
+           'serve_port=80',
+           "serve_storage=/var/serve"],
+          user: :'www-data',
+          group: 'www-data').call
+end
+
+# Local Variables:
+# mode: ruby
+# End:
+```
+
+#### Filesystem hierarchy
+
+```
+/etc/services
+└── httpd
+    ├── manifest.yml
+    └── run
+```
+
+For more information see: [sv-utils][github.com:swagdevops/sv-utils].
+
 <a name="see_also"></a>
 ## See also
 
 * [A minimal Ubuntu base image][phusion/baseimage-docker]
 * [Alpine image with environment template and supervisord][qenv/alpine-base]
-
 * [Petit état de l'art des systèmes d'initialisation][linuxfr:petit-etat-de-l-art]
 
 <!-- hyperlinks references -->
@@ -115,13 +171,14 @@ for a list of version numbers.
 [dumb-init]: https://github.com/Yelp/dumb-init
 [ylem]: https://github.com/SwagDevOps/ylem
 [runit]: http://smarden.org/runit/
-[github.com:SwagDevOps/sv-utils]: https://github.com/SwagDevOps/sv-utils
 [su-exec:README#parentchild-handling]: https://github.com/ncopa/su-exec/blob/master/README.md#tty--parentchild-handling
 [blog.phusion.nl:docker-and-the-pid-1-zombie-reaping-problem]: https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/
 [manpage:runsvdir]: http://manpages.ubuntu.com/manpages/bionic/man8/runsvdir.8.html
+[manpage:runsv]: http://smarden.org/runit/runsv.8.html
 [phusion/baseimage-docker]: https://github.com/phusion/baseimage-docker
 [qenv/alpine-base]: https://github.com/qenv/alpine-base
 [linuxfr:petit-etat-de-l-art]: https://linuxfr.org/news/petit-etat-de-l-art-des-systemes-d-initialisation-1
+[github.com:swagdevops/sv-utils]: https://github.com/SwagDevOps/sv-utils
 [docker_hub.com:swagdevops/alpine_server]: https://hub.docker.com/r/swagdevops/alpine_server
 [github.com:swagdevops/alpine/server/releases]: https://github.com/SwagDevOps/image-alpine_server/releases
 [vsupalov.com:wrong-with-latest]: https://vsupalov.com/docker-latest-tag/
