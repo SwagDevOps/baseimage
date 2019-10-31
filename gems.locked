@@ -26,7 +26,7 @@ GEM
     equatable (0.6.1)
     excon (0.68.0)
     interesting_methods (0.1.2)
-    jaro_winkler (1.5.3)
+    jaro_winkler (1.5.4)
     kamaze-project (1.0.4)
       cli-ui (~> 1.1)
       cliver (~> 0.3)
