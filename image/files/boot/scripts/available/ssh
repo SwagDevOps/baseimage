@@ -11,7 +11,7 @@ if __FILE__ == $PROGRAM_NAME
   exit(0) unless Boot::Services::Setup.new.config.key?(:ssh)
 
   Boot::ThreadPool.new do |pool|
-    [Boot::SSH::Auth, Boot::SSH::DropbearSetup].map do |klass|
+    [Boot::SSH::Auth, Boot::Dropbear::Setup].map do |klass|
       pool.schedule { klass.new.call }
     end
   end.call
