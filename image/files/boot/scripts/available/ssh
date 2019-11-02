@@ -8,13 +8,11 @@ require '/boot/lib/ruby/boot'
 if __FILE__ == $PROGRAM_NAME
   at_exit { GC.start }
 
-  Boot::Services::Setup.new.config.key?(:ssh).tap do |flag|
-    if flag
-      Boot::ThreadPool.new do |pool|
-        [Boot::SSH::Auth, Boot::SSH::DropbearSetup].map do |klass|
-          pool.schedule { klass.new.call }
-        end
-      end.call
+  exit(0) unless Boot::Services::Setup.new.config.key?(:ssh)
+
+  Boot::ThreadPool.new do |pool|
+    [Boot::SSH::Auth, Boot::SSH::DropbearSetup].map do |klass|
+      pool.schedule { klass.new.call }
     end
-  end
+  end.call
 end
