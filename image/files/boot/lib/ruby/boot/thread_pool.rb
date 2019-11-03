@@ -8,12 +8,16 @@ require_relative '../boot'
 # (max pools size is configurable),
 # and waits unil all threads are terminated.
 class Boot::ThreadPool
-  autoload(:Pathname, 'pathname')
-  autoload(:YAML, 'yaml')
+  # @formatter:off
+  {
+    CpuInfo: 'cpu_info',
+    Runner: 'runner',
+  }.each { |s, fp| autoload(s, "#{__dir__}/thread_pool/#{fp}") }
+  # @formatter:on
 
   def initialize(**options)
-    @jobs = []
-    @pools_size = options[:pools_size] || cpuinfo.fetch(:siblings, 1) + 1
+    @jobs = Queue.new
+    @pool = Runner.new(*[options[:pools_size]].compact)
 
     yield(self) if block_given?
     (options.key?(:auto_start) ? options[:auto_start] : true).tap do |b|
@@ -25,86 +29,48 @@ class Boot::ThreadPool
     jobs.push(block)
   end
 
-  # @see ThreadPool.cpuinfo
-  #
-  # @return [Hash{Symbol => String}]
-  def cpuinfo
-    @cpuinfo ||= self.class.cpuinfo
-  end
-
   # @return [Array<Thread>]
   def call
     self.run
   end
 
-  class << self
-    # rubocop:disable Metrics/AbcSize
-
-    # Get CPU Info in Linux
-    #
-    # The simplest way to determine what type of CPU you have,
-    # is by displaying the contents of the ``/proc/cpuinfo`` virtual file.
-    # Identifying the type of processor using the ``proc/cpuinfo`` file does not
-    # require installing any additional programs.
-    # It will work no matter what Linux distribution you are using.
-    #
-    # @return [Hash{Symbol => String|Fixnum}]
-    def cpuinfo
-      Pathname.new('/proc/cpuinfo').read.strip.lines.map do |line|
-        # @formatter:off
-        [
-          line.split(':')[0].strip.downcase.gsub(/\W+/, '_').to_sym,
-          line.split(':')[1..-1].join(':').strip
-        ]
-        # @formatter:on
-      end.reject { |k, _v| k.to_s.empty? }.map do |k, v|
-        [k, YAML.safe_load(v)]
-      rescue StandardError
-        [k, v]
-      end.to_h
-    end
-  end
-
-  # rubocop:enable Metrics/AbcSize
-
   protected
+
+  # Pool runner.
+  #
+  # @return [Runner]
+  attr_accessor :pool
 
   # Jobs to execute/process.
   #
-  # @return [Array<Proc>]
+  # @return [Queue<Proc>]
   attr_accessor :jobs
 
-  # Size for pools.
-  #
-  # @retrun [Integer]
-  attr_accessor :pools_size
-
-  # Execute scheduled jobs by pools.
-  #
-  # @return [Array<Thread>]
+  # Execute scheduled jobs.
   def run
-    [].tap do |pool|
-      until jobs.empty?
-        jobs.shift(pools_size).each do |job|
-          thread(&job).tap { |thread| pool.push(thread) }
-        end
-
-        sleep(0.0001) while pool.map(&:alive?).include?(true)
+    # rubocop:disable Style/WhileUntilModifier
+    pool.to_a.tap do
+      while pool.alive? or !jobs.empty?
+        statements.each(&:call)
       end
     end
+    # rubocop:enable Style/WhileUntilModifier
   end
 
-  # Execute given block as thread.
+  # Statements used during `run`.
   #
-  # If any thread is aborted by an exception,
-  # the raised exception will be re-raised in the main thread.
-  #
-  # @return [Thread]
-  def thread(&block)
-    Thread.new do
-      Thread.current.abort_on_exception = true
+  # @return [Array<Proc>]
+  def statements
+    available_statements.keep_if { |_m, v| v }.keys
+  end
 
-      block.call
-    end
+  # @return [Hash{Proc => Boolean}]
+  def available_statements
+    # @formatter:off
+    {
+      -> { pool.push(jobs.shift) if pool.ready? } => !jobs.empty?,
+      -> { sleep(1.0 / 100_000) } => pool.alive?,
+    }
+    # @formatter:on
   end
 end
