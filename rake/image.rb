@@ -45,5 +45,13 @@ Kamaze::DockerImage.new do |config|
 end.tap do |image|
   # noinspection RubyBlockToMethodReference
   singleton_class.__send__(:define_method, :image) { image }
+
+  image.singleton_class.__send__(:define_method, :vendor) do
+    Pathname.new("#{image.path}/build/vendor")
+  end
+
+  image.singleton_class.__send__(:define_method, :dockerfile) do
+    Pathname.new("#{image.path}/Dockerfile")
+  end
 end
 # rubocop:enable Metrics/BlockLength
