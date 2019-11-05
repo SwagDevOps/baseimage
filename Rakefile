@@ -11,11 +11,12 @@ if Gem::Specification.find_all_by_name('sys-proc').any?
 end
 
 Dir.chdir(__dir__) do
-  autoload(:Dotenv, 'dotenv')
+  lambda do
+    autoload(:Dotenv, 'dotenv')
+    Dotenv
+  end.call.load
 
-  Dotenv.load
   ENV['image_name'] ||= 'alpine_server'
 
-  %w[image project build]
-    .each { |req| require_relative "rake/#{req}" }
+  %w[image build project].each { |req| require_relative "rake/#{req}" }
 end
