@@ -58,7 +58,7 @@ class Boot::ThreadPool::Runner < Array
   #
   # @return [Thread]
   def thread(&block)
-    Thread.new do
+    Boot::ThreadPool::SafeThread.new do
       Thread.current.abort_on_exception = true
 
       block.call
