@@ -12,6 +12,7 @@ class Boot::ThreadPool
   {
     CpuInfo: 'cpu_info',
     Runner: 'runner',
+    SafeThread: 'safe_thread',
   }.each { |s, fp| autoload(s, "#{__dir__}/thread_pool/#{fp}") }
   # @formatter:on
 
