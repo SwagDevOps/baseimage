@@ -20,7 +20,7 @@ class Boot::ThreadPool::SafeThread < ::Thread
 
   protected
 
-  # @return [Exception|mil]
+  # @return [Exception|nil]
   attr_accessor :postponed_exception
 
   # Denote has stored exception.
