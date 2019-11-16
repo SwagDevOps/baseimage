@@ -58,11 +58,7 @@ class Boot::ThreadPool::Runner < Array
   #
   # @return [Thread]
   def thread(&block)
-    Boot::ThreadPool::SafeThread.new do
-      Thread.current.abort_on_exception = true
-
-      block.call
-    end
+    Boot::ThreadPool::SafeThread.new(&block)
   end
 
   # Get CPU information.
