@@ -33,6 +33,7 @@ class Boot::ThreadPool
   # Execute scheduled jobs.
   #
   # @return [Array<Thread>]
+  # @raise [Exception] any exception raised from threads.
   def call
     self.run
   end
@@ -59,7 +60,7 @@ class Boot::ThreadPool
           SafeThread.new { pool.done.each(&:join) }.tap { stt.call }.join
         end
       end
-    end
+    end.each(&:join)
   end
 
   # Statements used during `run`.
