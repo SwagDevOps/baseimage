@@ -30,6 +30,8 @@ class Boot::ThreadPool
     jobs.push(block)
   end
 
+  # Execute scheduled jobs.
+  #
   # @return [Array<Thread>]
   def call
     self.run
