@@ -48,14 +48,16 @@ class Boot::ThreadPool
   attr_accessor :jobs
 
   # Execute scheduled jobs.
+  #
+  # @return [Array<Thread>]
   def run
-    # rubocop:disable Style/WhileUntilModifier
     pool.to_a.tap do
       while pool.alive? or !jobs.empty?
-        statements.each(&:call)
+        statements.each do |stt|
+          SafeThread.new { pool.done.each(&:join) }.tap { stt.call }.join
+        end
       end
     end
-    # rubocop:enable Style/WhileUntilModifier
   end
 
   # Statements used during `run`.
