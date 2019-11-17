@@ -37,6 +37,13 @@ class Boot::ThreadPool::Runner < Array
     # rubocop:enable Style/NumericPredicate
   end
 
+  # Get executed threads.
+  #
+  # @return [Array<Thread>]
+  def done
+    self.reject(&:alive?)
+  end
+
   # @param [Proc] callable
   #
   # @return [self]
