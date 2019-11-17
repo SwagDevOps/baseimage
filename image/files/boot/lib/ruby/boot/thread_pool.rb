@@ -66,7 +66,7 @@ class Boot::ThreadPool
   #
   # @return [Array<Proc>]
   def statements
-    available_statements.keep_if { |_m, v| v }.keys
+    available_statements.keep_if { |_m, v| v == true }.keys
   end
 
   # @return [Hash{Proc => Boolean}]
