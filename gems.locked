@@ -24,7 +24,7 @@ GEM
     dotenv (2.7.5)
     dry-inflector (0.2.0)
     equatable (0.6.1)
-    excon (0.67.0)
+    excon (0.71.0)
     interesting_methods (0.1.2)
     jaro_winkler (1.5.3)
     kamaze-project (1.0.4)
