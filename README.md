@@ -137,10 +137,6 @@ Dir.chdir('/var/www/localhost') do
           user: :'www-data',
           group: 'www-data').call
 end
-
-# Local Variables:
-# mode: ruby
-# End:
 ```
 
 #### Filesystem hierarchy
