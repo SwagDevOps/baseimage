@@ -125,6 +125,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  excon (~> 0.71, >= 0.71.0)
   interesting_methods (~> 0.1)
   kamaze-docker_image!
   kamaze-project (~> 1.0, >= 1.0.3)
