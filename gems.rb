@@ -21,7 +21,7 @@ group :development do
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
   # repl ---------------------------------
   gem 'interesting_methods', '~> 0.1'
-  gem 'pry', '~> 0.11'
+  gem 'pry', '~> 0.12'
   gem 'pry-coolline', '~> 0.2'
 end
 
