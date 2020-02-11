@@ -11,16 +11,6 @@
 
 task default: [:build]
 
-self.image.tap do |image|
-  self.image.singleton_class.__send__(:define_method, :vendor) do
-    Pathname.new("#{image.path}/build/vendor")
-  end
-
-  self.image.singleton_class.__send__(:define_method, :dockerfile) do
-    Pathname.new("#{image.path}/Dockerfile")
-  end
-end
-
 task image.dockerfile do |task|
   image.version.to_h.merge(image: image).tap do |context|
     # @formatter:off

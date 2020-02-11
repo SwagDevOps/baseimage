@@ -24,17 +24,17 @@ ENV INITRD=no \
 RUN apk add --no-cache #{Shellwords.join(packages)}
 
 COPY build /build
-RUN chmod -v 755 /build/run && \
-    find /build/scripts/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
+RUN chmod 755 /build/run && \
+    find /build/scripts/ -type f -maxdepth 1 -exec chmod 755 {} \; && \
     /build/run
 
 COPY files /
 COPY version.yml /etc/image.yml
 RUN chmod 444 /etc/image.yml && \
-    chmod -v 755 /boot/run /sbin/runsvdir-start && \
-    find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod -v 755 {} \; && \
+    chmod 755 /boot/run /sbin/runsvdir-start && \
+    find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod 755 {} \; && \
     rsync -rua /etc/skel/.*[:alnum:]* /root/ && \
-    find /root/ -type f -name ".*" -exec chmod -v 400 {} \; && \
+    find /root/ -type f -name ".*" -exec chmod 400 {} \; && \
     (cd /usr/bin && ln -s nvim vim)
 
 ENTRYPOINT ["/boot/run"]

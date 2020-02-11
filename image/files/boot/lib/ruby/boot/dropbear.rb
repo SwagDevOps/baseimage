@@ -3,12 +3,12 @@
 require_relative '../boot'
 
 # Almost a namespace.
-module Boot::SSH
+module Boot::Dropbear
   autoload(:Pathname, 'pathname')
 
   # @formatter:off
   {
-    Auth: 'auth',
-  }.each { |s, fp| autoload(s, Pathname.new(__dir__).join("ssh/#{fp}")) }
+    Setup: 'setup',
+  }.each { |s, fp| autoload(s, Pathname.new(__dir__).join("dropbear/#{fp}")) }
   # @formatter:on
 end

@@ -33,9 +33,7 @@ Kamaze::DockerImage.new do |config|
   config.run_as = ENV.fetch('image_name').split('/').reverse
                      .concat([ENV['registry']].compact.reject(&:empty?))
                      .join('.')
-  # @formatter:on
 
-  # @formatter:off
   config.commands.merge!(
     stop: ['stop', '-t', 20, '%<run_as>s'],
     start: ['run', '-h', config.run_as,
@@ -43,8 +41,17 @@ Kamaze::DockerImage.new do |config|
             '-d', '--name', '%<run_as>s', '%<tag>s']
   )
   # @formatter:on
+  config.tasks_load = !self.respond_to?(:image)
 end.tap do |image|
   # noinspection RubyBlockToMethodReference
   singleton_class.__send__(:define_method, :image) { image }
+
+  image.singleton_class.__send__(:define_method, :vendor) do
+    Pathname.new("#{image.path}/build/vendor")
+  end
+
+  image.singleton_class.__send__(:define_method, :dockerfile) do
+    Pathname.new("#{image.path}/Dockerfile")
+  end
 end
 # rubocop:enable Metrics/BlockLength

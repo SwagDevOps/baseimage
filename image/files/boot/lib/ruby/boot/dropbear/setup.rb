@@ -8,7 +8,7 @@ require_relative '../ssh'
 # When a (openssh) PEM file is present, it will be used to generate
 # a RSA (dropbear) key. Instead, if a RSA file is present, it will be used.
 # Hostkey already present will be overwritten by the result of this script.
-class Boot::SSH::DropbearSetup
+class Boot::Dropbear::Setup
   autoload(:Pathname, 'pathname')
   autoload(:FileUtils, 'fileutils')
   include(FileUtils::Verbose)
