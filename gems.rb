@@ -21,11 +21,12 @@ group :development do
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
   # repl ---------------------------------
   gem 'interesting_methods', '~> 0.1'
-  gem 'pry', '~> 0.11'
+  gem 'pry', '~> 0.12'
   gem 'pry-coolline', '~> 0.2'
 end
 
 group :test do
+  gem 'excon', '~> 0.71', '>= 0.71.0'
   gem 'rspec', '~> 3.9'
   gem 'serverspec', '~> 2.41'
 end
