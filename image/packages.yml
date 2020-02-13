@@ -4,13 +4,11 @@ apk:
   - bash-completion
   - busybox
   - coreutils
-  - curl
   - dropbear
   - dropbear-convert
   - dumb-init
   - file
   - grep
-  - htop
   - less
   - libcap
   - multitail
@@ -29,5 +27,4 @@ apk:
   - sed
   - shadow
   - su-exec
-  - tar
   - tzdata
