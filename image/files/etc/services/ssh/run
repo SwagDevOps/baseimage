@@ -2,7 +2,7 @@
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
 (ENV['SSH_PORT'] || 22).tap do |port|
-  service("/usr/sbin/dropbear -Fsp #{port} -r /etc/dropbear/host_rsa").call
+  service("/usr/sbin/dropbear -Fsp #{port} -r #{ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear')}/host.key").call
 end
 
 # Local Variables:

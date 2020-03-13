@@ -4,7 +4,7 @@ describe 'services', :services do
   {
     cron: '/usr/sbin/crond -S -f',
     syslog: '/sbin/syslogd -SnO /proc/1/fd/2',
-    ssh: '/usr/sbin/dropbear -Fsp 22 -r /etc/dropbear/host_rsa'
+    ssh: '/usr/sbin/dropbear -Fsp 22 -r /etc/dropbear/host.key'
   }.each do |service, command|
     describe command('ps -Ao args --no-headers') do
       its(:stdout) { should match(/^#{command}$/) }
