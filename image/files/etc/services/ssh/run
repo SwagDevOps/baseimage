@@ -1,8 +1,21 @@
 #!/usr/bin/env svrun
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-(ENV['SSH_PORT'] || 22).tap do |port|
-  service("/usr/sbin/dropbear -Fsp #{port} -r #{ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear')}/host.key").call
+autoload(:Pathname, 'pathname')
+
+ENV.fetch('DROPBEAR_CONFDIR', '/etc/dropbear').yield_self do |conf_dir|
+  {
+    port: ENV.fetch('SSH_PORT', 22),
+    host_key: Pathname.new(conf_dir).join('host.key')
+  }.tap do |config|
+    [
+      '/usr/sbin/dropbear',
+      '-Fsp',
+      config.fetch(:port),
+      '-r',
+      config.fetch(:host_key),
+    ].map(&:to_s).tap { |cmd| service(cmd).call }
+  end
 end
 
 # Local Variables:
