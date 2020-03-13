@@ -4,7 +4,6 @@ require_relative '../env'
 
 # Provides environment export.
 class Boot::Env::Export < Hash
-  autoload(:Shellwords, 'shellwords')
   autoload(:Pathname, 'pathname')
 
   # @param [ENV|Hash] env
@@ -16,7 +15,7 @@ class Boot::Env::Export < Hash
 
   # @return [String]
   def to_s
-    self.map { |k, v| "#{k}=#{Shellwords.escape(v)}\n" }.join
+    self.map { |k, v| [k, v.to_s.inspect].join('=') }.join("\n")
   end
 
   # Environment formatted, with ``export``.
