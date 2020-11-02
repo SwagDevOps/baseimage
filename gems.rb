@@ -27,6 +27,6 @@ end
 
 group :test do
   gem 'excon', '~> 0.71', '>= 0.71.0'
-  gem 'rspec', '~> 3.9'
+  gem 'rspec', '~> 3.10'
   gem 'serverspec', '~> 2.41'
 end
