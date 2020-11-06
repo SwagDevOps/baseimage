@@ -17,7 +17,7 @@ end
 
 group :development do
   gem 'kamaze-project', '~> 1.0', '>= 1.0.3'
-  gem 'rubocop', '~> 0.58'
+  gem 'rubocop', '~> 1.2'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
   # repl ---------------------------------
   gem 'interesting_methods', '~> 0.1'
