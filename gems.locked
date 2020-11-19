@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/SwagDevOps/kamaze-docker_image.git
-  revision: fcfb9db4999e7975cc9330e9fe2d1c805e2610b7
+  revision: 2cd9a89ced806e6e0ed441e5e48d44f3a7fd0c50
   branch: develop
   specs:
     kamaze-docker_image (0.0.4)
@@ -42,7 +42,7 @@ GEM
     kamaze-version (1.0.2)
       dry-inflector (~> 0.1)
     method_source (0.9.2)
-    multi_json (1.14.1)
+    multi_json (1.15.0)
     necromancer (0.5.1)
     net-scp (2.0.0)
       net-ssh (>= 2.6.5, < 6.0.0)
