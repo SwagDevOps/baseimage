@@ -1,7 +1,7 @@
 ---
-from: 'alpine:3.11.3'
+from: 'alpine:3.12.1'
 major: 3
-minor: 11
+minor: 12
 patch: 0
 maintainer: 'Dimitri Arrigoni'
 email: 'dimitri@arrigoni.me'
