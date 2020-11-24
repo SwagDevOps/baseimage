@@ -8,9 +8,11 @@ autoload(:YAML, 'yaml')
 #        ATM it use ``be_installed`` matcher
 describe 'installed packages', :packages do
   Pathname.new(__FILE__.gsub(/\.rb$/, '.yml')).read.tap do |c|
-    YAML.safe_load(c).fetch('apk').each do |package|
-      describe package(package) do
-        it { should be_installed.by('apk') }
+    YAML.safe_load(c).each do |installer, packages|
+      packages.each do |package|
+        describe package(package) do
+          it { should be_installed.by(installer) }
+        end
       end
     end
   end

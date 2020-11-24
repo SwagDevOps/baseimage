@@ -3,7 +3,7 @@
 /image/Dockerfile
 /rake/config/*
 /ssh/*
-!/.env.dist
+!/**/*.dist
 !/.gitignore
 !/.rspec
 !/.rubocop.yml

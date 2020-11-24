@@ -7,9 +7,9 @@ autoload(:YAML, 'yaml')
 
 # rubocop:disable Metrics/BlockLength
 Kamaze::DockerImage.new do |config|
-  config.version = Kamaze::Version.new('image/version.yml').freeze
   config.path = 'image'
-  config.verbose = false
+  config.version = Kamaze::Version.new("#{config.path}/version.yml").freeze
+  config.verbose = ENV.fetch('verbose', 'false').yield_self { |v| YAML.safe_load(v) }
   # @formatter:off
   config.ssh = lambda do
     { enabled: true }.tap do |c|

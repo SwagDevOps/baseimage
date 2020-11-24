@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe 'etc/dropbear files', :etc, :'etc/dropbear' do
-  describe file('/etc/dropbear/host_rsa') do
+  describe file('/etc/dropbear/host.key') do
     it { should be_file }
 
     it { should be_owned_by 'root' }
