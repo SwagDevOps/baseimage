@@ -5,7 +5,7 @@ Pathname.new(__dir__).join('helper.rb').tap do |file|
 end
 ?>
 
-FROM #{quote(@from)}
+FROM #{@from}
 
 LABEL maintainer=#{quote('%s <%s>' % [@maintainer, @email])} \
       org.label-schema.name=#{quote(@image.name)} \
@@ -24,18 +24,20 @@ ENV INITRD=no \
 RUN apk add --no-cache #{Shellwords.join(packages.sort)}
 
 COPY build /build
-RUN chmod 755 /build/run && \
-    find /build/scripts/ -type f -maxdepth 1 -exec chmod 755 {} \; && \
+RUN set -eux ;\
+    chmod 755 /build/run ;\
+    find /build/scripts/ -type f -maxdepth 1 -exec chmod 755 {} \; ;\
     /build/run
 
 COPY files /
 COPY version.yml /etc/image.yml
-RUN chmod 444 /etc/image.yml && \
-    chmod 755 /boot/run /sbin/runsvdir-start && \
-    find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod 755 {} \; && \
-    rsync -rua /etc/skel/.*[:alnum:]* /root/ && \
-    find /root/ -type f -name ".*" -exec chmod 400 {} \; && \
-    (cd /usr/bin && ln -s nvim vim)
+RUN set -eux ;\
+    chmod 444 /etc/image.yml ;\
+    chmod 755 /boot/run /sbin/runsvdir-start ;\
+    find /boot/scripts/available/ -type f -maxdepth 1 -exec chmod 755 {} \; ;\
+    rsync -rua /etc/skel/.*[:alnum:]* /root/ ;\
+    find /root/ -type f -name ".*" -exec chmod 400 {} \; ;\
+    ln -sfr /usr/bin/nvim /usr/bin/vim
 
 ENTRYPOINT ["/boot/run"]
 CMD ["runsvdir-start"]
