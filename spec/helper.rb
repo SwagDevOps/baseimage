@@ -1,18 +1,15 @@
 # frozen_string_literal: true
 
-if Gem::Specification.find_all_by_name('sys-proc').any?
-  require 'sys/proc'
-
-  Sys::Proc.progname = 'serverspec'
-end
-
 # noinspection RubyResolve
 require 'rbconfig'
+# noinspection RubyResolve
+require 'serverspec'
 
 # @formatter:off
 # noinspection RubyResolve
 # noinspection RubyLiteralArrayInspection
 [
+  'env',
   'image',
   'alpine_version',
   'image_version',

@@ -21,7 +21,7 @@ ENV INITRD=no \
     SVDIR=/var/services \
     SVWAIT=4
 
-RUN apk add --no-cache #{Shellwords.join(packages)}
+RUN apk add --no-cache #{Shellwords.join(packages.sort)}
 
 COPY build /build
 RUN chmod 755 /build/run && \

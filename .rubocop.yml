@@ -4,4 +4,5 @@ inherit_gem:
     - .rubocop.yml
 AllCops:
   TargetRubyVersion: 2.5
+  NewCops: disable
 Style/AsciiComments: { Enabled: false }
