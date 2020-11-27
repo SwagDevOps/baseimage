@@ -24,13 +24,23 @@ end
 
 task image.vendor do |_task, args|
   # noinspection RubyLiteralArrayInspection
-  ['Vendorfile.rb', 'Vendorfile'].map { |f| image.path.join(f) }.tap do |files|
+  ['Vendorfile.rb', 'Vendorfile', 'vendorer.yml'].map { |f| image.path.join(f) }.tap do |files|
     Vendorer.new(update: args.to_a.include?('update')).tap do |v|
-      self.image.vendor.tap do |dir|
-        v.singleton_class.__send__(:define_method, :vendor) { dir }
+      v.singleton_class.tap do |vendorer_class|
+        self.image.tap do |image|
+          vendorer_class.__send__(:define_method, :image) { image }
+        end
+
+        self.image.vendor.tap do |dir|
+          vendorer_class.__send__(:define_method, :vendor) { dir }
+        end
       end
 
-      (files.detect(&:file?) || files.last).tap { |f| v.parse(f.read) }
+      (files.detect(&:file?) || files.last).tap do |f|
+        (f.to_s =~ /\.yml$/ ? Pathname.new(__dir__).join('resources', 'vendorer.rb') : f).tap do |file|
+          v.parse(file.read)
+        end
+      end
     end
   end
 end

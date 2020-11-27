@@ -1,0 +1,10 @@
+---
+bohu:
+  - https://github.com/SwagDevOps/bohu
+  - { branch: master }
+sv-utils:
+  - https://github.com/SwagDevOps/sv-utils
+  - { branch: master, ref: e438944 }
+ylem:
+  - https://github.com/SwagDevOps/ylem
+  - { tag: v1.0.5 }
