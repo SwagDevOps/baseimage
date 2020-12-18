@@ -2,16 +2,22 @@
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
 autoload(:YAML, 'yaml')
+
 # @type [Object] image
 # @type [Pathname] vendor
 # @type [Vendorer] self
-image.path.join('vendorer.yml').realpath.read.yield_self do |s|
-  YAML.safe_load(s).sort.to_h
-end.tap do |h|
+image.path.join('vendorer.yml').realpath.read.yield_self { |s| YAML.safe_load(s).sort.to_h }.tap do |config|
   if Object.const_defined?(:Vendorer) and self.is_a?(Vendorer)
-    h.each { |k, v| self.public_send(:folder, *[vendor.join(k.to_s)].concat(v)) }
+    config.each do |k, v|
+      path = vendor.join(k.to_s)
+      args = v.reject { |arg| arg.is_a?(Hash) }
+      kwargs = v.keep_if { |h| h.is_a?(Hash) }.last.transform_keys(&:to_sym)
+
+      self.public_send(:folder, *[path].concat(args), **kwargs)
+    end
   end
 end
+
 # Local Variables:
 # mode: ruby
 # End:
