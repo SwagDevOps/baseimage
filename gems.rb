@@ -21,7 +21,7 @@ group :development do
     gem(*['kamaze-project'].concat([options]))
   end
 
-  gem 'rubocop', '~> 0.58'
+  gem 'rubocop', '~> 1.9'
   gem 'rugged', '~> 1.1'
   gem 'sys-proc', '~> 1.1', '>= 1.1.2'
   # repl ---------------------------------
