@@ -1,25 +1,21 @@
 # frozen_string_literal: true
 
-# @formatter:off
 # noinspection RubyBlockToMethodReference
 {
   Vendorer: 'vendorer',
   CLOBBER: 'rake/clean',
   Tenjin: 'tenjin',
 }.each { |k, v| autoload(k, v) }
-# @formatter:on
 
 task default: [:build]
 
 task image.dockerfile do |task|
   image.version.to_h.merge(image: image).tap do |context|
-    # @formatter:off
     Tenjin::Engine
       .new(cache: false)
       .render("#{task.name}.tpl", context)
       .tap { |output| Pathname.new(task.name).write(output) }
   end
-  # @formatter:on
 end
 
 task image.vendor do |_task, args|
