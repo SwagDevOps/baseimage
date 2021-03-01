@@ -1,9 +1,5 @@
 ---
-service:
-  command:
-  privileged: true
 loggerd:
-  privileged: true
   command: ['/sbin/svlogd', '-tt', '%<dir>s']
 control:
   futils: 'quiet'
