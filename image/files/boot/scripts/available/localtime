@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Install localtime file based on TZ environment.
+#
+# @see https://github.com/ogham/exa/issues/453#issuecomment-616688922
+# @see https://www.freedesktop.org/software/systemd/man/localtime.html
+# @see https://github.com/docker-library/openjdk/issues/80
+
+# noinspection RubyResolve
+require '/boot/lib/ruby/boot'
+require 'pathname'
+require 'fileutils'
+
+localtime = lambda do |env = ENV.to_h.dup, target: '/etc/localtime', fs: FileUtils::Verbose|
+  env['TZ'].yield_self do |time_zone|
+    return nil unless !time_zone.to_s.empty? and !Pathname.new(target).exist?
+
+    Pathname.new('/usr/share/zoneinfo').join(time_zone).tap do |file|
+      fs.ln_s(file.realpath, target)
+    rescue StandardError => e
+      warn(e)
+    end
+  end
+end
+
+# Execute setup
+if __FILE__ == $PROGRAM_NAME
+  at_exit { GC.start }
+
+  localtime.call
+end
