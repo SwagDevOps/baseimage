@@ -1,10 +1,19 @@
+# Vednorer configuration.
+#
+# Possible second argument syntaxes:
+#
+# * `{ tag: v1.0.0 }`
+# * `{ branch: master }`
+# * `{ branch: master, ref: e438944 }`
+#
+# @see https://github.com/grosser/vendorer
 ---
 bohu:
   - https://github.com/SwagDevOps/bohu
   - { branch: master }
 sv-utils:
   - https://github.com/SwagDevOps/sv-utils
-  - { branch: master, ref: e438944 }
+  - { branch: develop }
 ylem:
   - https://github.com/SwagDevOps/ylem
-  - { tag: v1.0.5 }
+  - { tag: v1.0.7 }
