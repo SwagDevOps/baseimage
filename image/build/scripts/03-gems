@@ -6,44 +6,125 @@
 # located in ``BUILD_VENDOR_DIR`` directory.
 
 require 'bohu/dsl'
-require 'yaml'
-require 'pathname'
 
-configurator = lambda do |config = nil, dir = ENV.fetch('BUILD_VENDOR_DIR')|
-  YAML.safe_load(Pathname.new(config).read).to_a.map do |name, options|
-    options = Hash[options.map { |(k, v)| [k.to_sym, v] }]
-    gem = options[:local] ? "#{dir}/#{name}" : name
-    kwargs = options.clone.delete_if{ |k,| k == :local }
+autoload(:Gem, 'rubygems')
+autoload(:Pathname, 'pathname')
+autoload(:YAML, 'yaml')
+autoload(:FileUtils, 'fileutils')
 
-    if options[:local]
-      [
-        # where to chdir
-        "#{dir}/#{name}",
-        # build
-        { gemspec: "#{name}.gemspec" },
-        # install (globbing)
-        kwargs.merge(gem: "#{name}-*.gem"),
-      ]
-    else
-      [kwargs.merge(gem: name)]
+self.__send__(:include, FileUtils::Verbose)
+
+configurator = lambda do |file = nil, dir = ENV.fetch('BUILD_VENDOR_DIR')|
+  config = Pathname.new(file).read.yield_self { |content| YAML.safe_load(content) }.to_h
+
+  {}.tap do |result|
+    result[:system] = config.fetch('system', nil)&.fetch('version', nil)
+    result[:gems] = config.fetch('gems', nil).to_a.map do |name, options|
+      lambda do
+        options = { bindir: '/usr/local/bin' }.merge(Hash[options.map { |(k, v)| [k.to_sym, v] }])
+        kwargs = options.clone.delete_if { |k, _| [:local, :standalone].include?(k) }
+
+        return [kwargs.merge(gem: name)] unless options[:local]
+
+        [
+          # where to chdir
+          "#{dir}/#{name}",
+          # build
+          { gemspec: "#{name}.gemspec", standalone: options.fetch(:standalone, true) },
+          # install (globbing)
+          kwargs.merge(gem: "#{name}-*.gem"),
+        ]
+      end.call
+    end
+  end.compact
+end
+
+gemspec = lambda do |filepath|
+  Pathname.new(filepath).realpath.tap do |fp|
+    fp.singleton_class.tap do |klass|
+      klass.__send__(:define_method, :to_spec) { Gem::Specification.load(self.to_s) }
     end
   end
 end
 
-"#{ENV.fetch('BUILD_CONFIG_DIR')}/gems.yml".tap do |file|
-  configurator.call(file).tap do |config|
-    config.each do |c|
-      if c.size == 1
-        gem_install(c[0])
-        next
-      end
+gemfile = lambda do |filepath|
+  ['source "https://rubygems.org"', nil].tap do |lines|
+    gemspec.call(filepath).to_spec.dependencies.keep_if { |v| v.type == :runtime }.each do |dependency|
+      lines.push("gem #{dependency.name.inspect}, #{dependency.requirement.as_list.map(&:inspect).join(', ')}")
+    end
+  end.push(nil).tap do |lines|
+    lines.singleton_class.tap do |klass|
+      klass.__send__(:define_method, :lines) { lines }
+      klass.__send__(:define_method, :to_s) { lines.join("\n") }
+      klass.__send__(:define_method, :to_path) { Pathname.new(Dir.pwd).join(filepath).dirname.join('gems.rb').to_s }
+      klass.__send__(:define_method, :save) { Pathname.new(to_path).write(self.to_s) }
+    end
+  end
+end
 
-      Dir.chdir(c[0]) do
-        gem_build(c[1])
-        Dir.glob(c[2][:gem])[0].tap do |gem|
-          gem_install(c[2].merge(gem: gem))
+cleaner = lambda do
+  %w[Gemfile Gemfile.lock .bundle gems.rb gems.locked]
+    .sort
+    .concat(Dir['{.[^\.]*,*}'].keep_if { |s| s[0] == '.' })
+    .map { |fp| Pathname.new(fp) }
+    .keep_if(&:file?)
+    .sort
+    .tap { |files| rm_rf(files) unless files.empty? }
+end
+
+context = lambda do |path, &block|
+  Dir.chdir(path) do
+    warn("cd #{Dir.pwd.inspect}")
+    block.call
+  end
+end
+
+standalone = lambda do |*params|
+  # bundle install in standalone mode
+  context.call(params[0]) do
+    {
+      BUNDLE_SILENCE_ROOT_WARNING: 1,
+      BUNDLE_JOBS: `nproc`.strip.yield_self { |res| /^[0-9]+$/.match(res) ? res.to_i : 1 },
+    }.each { |k, v| ENV[k.to_s] = ENV.fetch(k.to_s, v).to_s }
+
+    gemspec.call(params[1][:gemspec]).tap do |spec|
+      cleaner.call
+      gemfile.call(spec).save
+      sh('bundle', 'install', '--standalone')
+      spec.to_spec.tap do |s|
+        cp_lr(Dir.pwd, Pathname.new('/usr/local/share').join(s.name))
+        rm_rf('bundle') # bundle is not required anymore
+        s.executables.each do |exe|
+          Pathname.new(params.fetch(2).fetch(:bindir)).join(exe).tap do |executable|
+            ln_sf(Pathname.new('/usr/local/share').join(s.name).join(s.bindir).join(exe), executable)
+            chmod(0o755, executable.realpath)
+          end
         end
       end
     end
   end
 end
+
+installer = lambda do |*params|
+  return gem_install(params.fetch(0)) if params.size <= 1
+
+  unless params[1][:standalone]
+    Dir.chdir(params[0]) do
+      warn("cd #{Dir.pwd.inspect}")
+      gem_build(params[1])
+      Dir.glob(params[2][:gem]).fetch(0).tap { |gem| gem_install(params[2].merge(gem: gem)) }
+    end.tap { |result| return result }
+  end
+
+  return standalone.call(*params)
+end
+
+main = lambda do
+  "#{ENV.fetch('BUILD_CONFIG_DIR')}/gems.yml".yield_self { |fp| configurator.call(fp) }.tap do |config|
+    sh('gem', 'update', '--system', config[:system]) if config[:system]
+
+    config[:gems].to_a.each { |params| installer.call(*params) }
+  end
+end
+
+main.call

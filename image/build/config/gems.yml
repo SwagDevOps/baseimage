@@ -1,11 +1,15 @@
 ---
-ylem:
-  version: '= 1.0.5'
-  local: true
-  bindir: '/sbin'
-sv-utils:
-  version: '= 0.0.1'
-  local: true
-  bindir: '/sbin'
-pry:
-  local: false
+system:
+  # @see https://rubygems.org/gems/rubygems-update/versions
+  version: '3.2.2'
+gems:
+  ylem:
+    local: true
+    bindir: '/sbin'
+    standalone: true
+  sv-utils:
+    local: true
+    bindir: '/sbin'
+    standalone: true
+
+
