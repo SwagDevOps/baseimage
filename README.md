@@ -49,7 +49,9 @@ It would solve [the PID 1 problem][blog.phusion.nl:docker-and-the-pid-1-zombie-r
 ```sh
 git clone git@github.com:SwagDevOps/image-alpine_server.git
 cd image-alpine_server
-bundle install --path vendor/bundle --without development
+bundle config set --local clean 'true'
+bundle config set --local path 'vendor/bundle'
+bundle install --without development
 bundle exec rake build start exec
 ```
 
@@ -57,7 +59,6 @@ bundle exec rake build start exec
 
 ```sh
 docker run -d --rm --name trying.alpine_server swagdevops/alpine_server:VERSION
-
 ```
 
 ```sh
@@ -100,7 +101,7 @@ for a list of version numbers.
 <a name="adding_additional_daemons"></a>
 ### Adding additional daemons
 
-A daemon is a program which runs in the background of its system, such
+A daemon is a program running in the background of its system, such
 as a web server.
 
 You can add additional daemons (for example, your own app) to the image
@@ -127,16 +128,15 @@ auto_start: true
 #!/usr/bin/env svrun
 # vim: ai ts=2 sts=2 et sw=2 ft=ruby
 
-Dir.chdir('/var/www/localhost') do
-  service(['bundle',
-           'exec',
-           'rake',
-           'serve',
-           'serve_port=80',
-           "serve_storage=/var/serve"],
-          user: :'www-data',
-          group: 'www-data').call
-end
+service(['bundle',
+         'exec',
+         'rake',
+         'serve',
+         'serve_port=80',
+         "serve_storage=/var/serve"],
+        user: :'www-data',
+        group: 'www-data',
+        chdir: '/var/www/localhost').call
 ```
 
 #### Filesystem hierarchy
