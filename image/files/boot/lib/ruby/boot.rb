@@ -5,5 +5,5 @@
 module Boot
   require_relative 'boot/autoload'
 
-  Autoload.register(self, "#{__dir__}/boot")
+  Autoload.new.call(self)
 end
