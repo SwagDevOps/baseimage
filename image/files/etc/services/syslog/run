@@ -4,7 +4,7 @@
 # Send output to the container logs collector,
 # send output to PID 1's stdio streams within the container.
 
-service(['/sbin/syslogd', '-SnO', '/proc/1/fd/2']).call
+service(%w[/sbin/syslogd -SnO /proc/1/fd/2]).call
 
 # Local Variables:
 # mode: ruby
