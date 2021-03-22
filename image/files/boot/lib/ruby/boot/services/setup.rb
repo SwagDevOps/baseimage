@@ -2,6 +2,15 @@
 
 require_relative '../services'
 
+lambda do
+  autoload(:Pathname, 'pathname')
+  Pathname.new('/usr/local/share').join('sv-utils', 'lib').tap do |path|
+    $LOAD_PATH.unshift(path) if path.directory?
+  end
+
+  require 'sv/utils'
+end.call
+
 # Install services.
 #
 # Servive startup scripts are located in ``/etc/service``
@@ -45,28 +54,25 @@ class Boot::Services::Setup
   #
   # @return [Hash{Symbol => Boolean}]
   def config
-    # @formatter:off
+    # noinspection RubyYardReturnMatch
     manifests
       .keep_if { |_fp, config| config['enabled'] }
-      .map { |fp, config| [fp.dirname.basename.to_s.to_sym, config] }
-      .map { |name, config| [name, config['auto_start']] }
+      .transform_keys { |fp| fp.dirname.basename.to_s.to_sym }
+      .transform_values { |config| config['auto_start'] }
       .to_h
-    # @formatter:on
   end
 
   # List manifest files and get config indexed by filepaths.
   #
   # @return [Hash{Pathname => Hash}]
   def manifests
-    # @formatter:off
     Dir.glob(path.join('*/manifest.yml'))
        .sort
        .map { |fp| Pathname.new(fp) }
        .keep_if { |fp| fp.file? and fp.readable? }
        .map { |fp| [fp, YAML.safe_load(ERB.new(fp.read).result)] }
-       .map { |fp, config| [fp, defaults_apply(config)] }
        .to_h
-    # @formatter:on
+       .transform_values { |config| defaults_apply(config) }
   end
 
   protected
@@ -117,8 +123,6 @@ class Boot::Services::Setup
   end
 
   def load_services
-    require 'sv/utils/cli'
-
     Boot::ThreadPool.new do |pool|
       commands.map do |args|
         pool.schedule { Sv::Utils::CLI.call(:control, args) }
@@ -130,10 +134,6 @@ class Boot::Services::Setup
   #
   # @return [String]
   def fetch_path
-    require 'sv/utils/config'
-
-    Sv::Utils::Config.new.tap do |config|
-      return config['control']['paths'].fetch(0)
-    end
+    Sv::Utils::Config.new['control']['paths'].fetch(0)
   end
 end
