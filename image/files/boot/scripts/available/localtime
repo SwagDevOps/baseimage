@@ -8,9 +8,9 @@
 # @see https://github.com/docker-library/openjdk/issues/80
 
 # noinspection RubyResolve
-require '/boot/lib/ruby/boot'
-require 'pathname'
-require 'fileutils'
+$LOAD_PATH.unshift('/boot/lib/ruby').tap { require 'boot' }
+autoload(:Pathname, 'pathname')
+autoload(:FileUtils, 'fileutils')
 
 localtime = lambda do |env = ENV.to_h.dup, target: '/etc/localtime', fs: FileUtils::Verbose|
   env['TZ'].yield_self do |time_zone|

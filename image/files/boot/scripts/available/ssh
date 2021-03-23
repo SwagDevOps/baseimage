@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # noinspection RubyResolve
-require '/boot/lib/ruby/boot'
+$LOAD_PATH.unshift('/boot/lib/ruby').tap { require 'boot' }
 
 # Execute setup
 if __FILE__ == $PROGRAM_NAME

@@ -2,15 +2,13 @@
 # frozen_string_literal: true
 
 # noinspection RubyResolve
-require '/boot/lib/ruby/boot/env'
+$LOAD_PATH.unshift('/boot/lib/ruby').tap { require 'boot' }
 
 # This script SHOULD be replaced by ylem "hooks" when availbale.
 
 autoload(:Pathname, 'pathname')
 autoload(:FileUtils, 'fileutils')
-# rubocop:disable Style/MixinUsage
-include(FileUtils::Verbose)
-# rubocop:enable Style/MixinUsage
+__send__(:include, FileUtils::Verbose)
 
 at_exit { GC.start }
 
