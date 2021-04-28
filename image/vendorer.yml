@@ -10,7 +10,7 @@
 ---
 bohu:
   - https://github.com/SwagDevOps/bohu
-  - { branch: master }
+  - { branch: develop }
 sv-utils:
   - https://github.com/SwagDevOps/sv-utils
   - { tag: v0.0.3 }
