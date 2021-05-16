@@ -16,4 +16,4 @@ sv-utils:
   - { tag: v0.0.3 }
 ylem:
   - https://github.com/SwagDevOps/ylem
-  - { tag: v1.0.7 }
+  - { tag: v1.0.8 }
