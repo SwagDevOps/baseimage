@@ -5,13 +5,11 @@
 #
 # located in ``BUILD_VENDOR_DIR`` directory.
 
+Warning[:deprecated] = true
 require 'bohu/dsl'
-
-autoload(:Gem, 'rubygems')
 autoload(:Pathname, 'pathname')
 autoload(:YAML, 'yaml')
 autoload(:FileUtils, 'fileutils')
-
 self.__send__(:include, FileUtils::Verbose)
 
 configurator = lambda do |file = nil, dir = ENV.fetch('BUILD_VENDOR_DIR')|

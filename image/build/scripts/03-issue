@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pathname'
-require 'fileutils'
-# rubocop:disable Style/MixinUsage
-include(FileUtils::Verbose)
-# rubocop:enable Style/MixinUsage
+Warning[:deprecated] = true
+autoload(:Pathname, 'pathname')
+autoload(:FileUtils, 'fileutils')
+self.__send__(:include, FileUtils::Verbose)
 
 # Provide `/etc/issue*` files
 #

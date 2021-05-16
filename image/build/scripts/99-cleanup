@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'bohu/dsl'
-require 'yaml'
-require 'pathname'
+Warning[:deprecated] = true
+autoload(:Pathname, 'pathname')
+autoload(:YAML, 'yaml')
+autoload(:FileUtils, 'fileutils')
+self.__send__(:include, FileUtils::Verbose)
 
 "#{ENV.fetch('BUILD_CONFIG_DIR')}/cleanup.yml".tap do |file|
   YAML.safe_load(Pathname.new(file).read)

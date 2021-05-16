@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'bohu/dsl'
+Warning[:deprecated] = true
+autoload(:FileUtils, 'fileutils')
+self.__send__(:include, FileUtils::Verbose)
 
 ln_sf('/usr/bin/dumb-init', '/sbin/init')

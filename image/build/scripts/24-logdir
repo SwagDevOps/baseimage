@@ -2,11 +2,10 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'pathname'
-require 'fileutils'
-# rubocop:disable Style/MixinUsage
-include(FileUtils::Verbose)
-# rubocop:enable Style/MixinUsage
+Warning[:deprecated] = true
+autoload(:Pathname, 'pathname')
+autoload(:FileUtils, 'fileutils')
+self.__send__(:include, FileUtils::Verbose)
 
 Pathname.new('/var/log').tap do |logdir|
   logdir.join('lastlog').tap do |lastlog|
@@ -16,11 +15,9 @@ Pathname.new('/var/log').tap do |logdir|
 
   logdir.join('secure').tap do |seclog|
     Pathname.new('/etc/syslog.conf').tap do |config|
-      if config.file? and config.readable?
-        if /\s+#{seclog}\s*$/ =~ config.read
-          touch(seclog)
-          chmod(0o640, seclog)
-        end
+      if config.file? and config.readable? and /\s+#{seclog}\s*$/ =~ config.read
+        touch(seclog)
+        chmod(0o640, seclog)
       end
     end
   end
