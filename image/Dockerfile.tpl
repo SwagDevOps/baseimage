@@ -14,9 +14,9 @@ LABEL maintainer=#{quote('%s <%s>' % [@maintainer, @email])} \
 
 ENV INITRD=no \
     TZ=UTC \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8 \
+    LANGUAGE=C.UTF-8 \
     EDITOR=vim \
     SVDIR=/var/services \
     SVWAIT=4
