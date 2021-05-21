@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'services', :services do
+describe(*spec.to_a) do
   {
     cron: '/usr/sbin/crond -S -f',
     syslog: '/sbin/syslogd -SnO /proc/1/fd/2',

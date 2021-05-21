@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'dropbear', :dropbear do
+describe(*spec.to_a) do
   {
     dropbear: '/usr/sbin/dropbear',
     # This executables are executed during dropbear setup (init)

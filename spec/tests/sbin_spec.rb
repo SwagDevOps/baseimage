@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'sbin files', :sbin do
+describe(*spec.to_a) do
   describe file('/sbin/runsvdir-start') do
     it { should be_file }
 

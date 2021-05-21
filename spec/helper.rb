@@ -15,6 +15,7 @@ require 'serverspec'
   'image_version',
   'serverspec',
   'monkey_patch',
-  'matcher'
+  'matcher',
+  'methods',
 ].each { |fname| require("#{__FILE__.gsub(/\.rb$/, '')}/#{fname}") }
 # @formatter:on

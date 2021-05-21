@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'log files', :log do
+describe(*spec.to_a) do
   describe file('/var/log/lastlog') do
     it { should be_file }
     it { should be_owned_by 'root' }

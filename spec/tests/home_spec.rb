@@ -2,7 +2,7 @@
 
 autoload(:Pathname, 'pathname')
 
-describe 'home files', :home do
+describe(*spec.to_a) do
   describe file('/root/.ssh') do
     it { should be_directory }
 
@@ -20,7 +20,7 @@ describe 'home files', :home do
   end
 end
 
-describe 'home files', :home do
+describe(*spec.to_a) do
   # Check files installed during image build (see Dockerfile)
   #
   # @formatter:off

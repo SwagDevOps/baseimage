@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'init', :init do
+describe(*spec.to_a) do
   describe file('/sbin/init') do
     it { should be_file }
     it { should be_owned_by 'root' }

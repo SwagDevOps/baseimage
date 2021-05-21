@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'executables files', :exe, :executables do
+describe(*spec.to_a) do
   describe file('/usr/bin/vim') do
     it { should be_file }
     it { should be_symlink }

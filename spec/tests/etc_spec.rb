@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'etc contents', :etc do
+describe(*spec.to_a) do
   describe file('/etc/alpine-release') do
     it { should be_file }
 
@@ -27,7 +27,7 @@ describe 'etc contents', :etc do
   # @formatter:on
 end
 
-describe '/etc/issue* files', :etc do
+describe(*spec.to_a) do
   describe file('/etc/issue') do
     its(:content) do
       should eq("Alpine Linux #{ALPINE_VERSION} \\n \\l\n\n")
