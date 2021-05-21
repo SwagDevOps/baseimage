@@ -13,7 +13,7 @@ bohu:
   - { branch: develop }
 sv-utils:
   - https://github.com/SwagDevOps/sv-utils
-  - { tag: v0.0.3 }
+  - { tag: v0.0.4 }
 ylem:
   - https://github.com/SwagDevOps/ylem
-  - { tag: v1.0.8 }
+  - { tag: v1.0.9 }
