@@ -17,6 +17,6 @@ describe 'sbin files', :sbin do
     it { should be_owned_by 'root' }
     it { should be_grouped_into 'root' }
 
-    its(:md5sum) { should eq 'e6a16836a9e65396c2fbcdbd78357efc' }
+    its(:md5sum) { should eq 'e57ffba972a7c9be212c011d95abcf0c' }
   end
 end
